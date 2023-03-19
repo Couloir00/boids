@@ -1,7 +1,13 @@
-#include <cstdlib>
+
 #include "p6/p6.h"
 #define DOCTEST_CONFIG_IMPLEMENT
+#include <cstdlib>
+#include <vector>
+#include "boid.hpp"
 #include "doctest/doctest.h"
+#include "glm/fwd.hpp"
+
+using vec = glm::vec2;
 
 int main(int argc, char* argv[])
 {
@@ -15,18 +21,30 @@ int main(int argc, char* argv[])
     }
 
     // Actual app
-    auto ctx = p6::Context{{.title = "Simple-p6-Setup"}};
+    auto ctx = p6::Context{{.title = "giveItATry"}};
     ctx.maximize_window();
+    // vector of numberBoids boids
+    std::vector<Boid> boids;
+    int               numberBoids = 100;
+    boids.reserve(numberBoids);
+    for (int i = 0; i < numberBoids; i++)
+    {
+        boids.emplace_back();
+    }
 
     // Declare your infinite update loop.
     ctx.update = [&]() {
         ctx.background(p6::NamedColor::Blue);
+        for (auto& b : boids)
+        {
+            b.update();
+            b.draw(ctx);
+        }
         ctx.circle(
             p6::Center{ctx.mouse()},
             p6::Radius{0.2f}
         );
     };
-
     // Should be done last. It starts the infinite loop.
     ctx.start();
 }
