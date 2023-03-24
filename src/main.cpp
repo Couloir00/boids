@@ -7,6 +7,9 @@
 #include "doctest/doctest.h"
 #include "glm/fwd.hpp"
 
+// TO DO normaliser la fenêtre et faire en sorte que les boids restent dedans puis poursuivre avec la vidéo
+// The coding train https://www.youtube.com/watch?v=mhjuuHl6qHM&t=276s 9min
+
 using vec = glm::vec2;
 
 int main(int argc, char* argv[])
@@ -23,6 +26,9 @@ int main(int argc, char* argv[])
     // Actual app
     auto ctx = p6::Context{{.title = "giveItATry"}};
     ctx.maximize_window();
+
+    float WindowRatio = ctx.aspect_ratio();
+
     // vector of numberBoids boids
     std::vector<Boid> boids;
     int               numberBoids = 100;
