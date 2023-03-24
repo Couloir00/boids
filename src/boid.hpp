@@ -19,6 +19,9 @@ public:
     // ~Boid();
     void update();
     void draw(p6::Context& ctx);
+    bool closeToEdges(p6::Context& ctx) const;
+    vec inline setVelocity(vec vel) { return m_velocity = vel; }
+    vec inline getVelocity() { return m_velocity; }
 };
 
 #endif

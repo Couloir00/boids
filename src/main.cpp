@@ -44,6 +44,10 @@ int main(int argc, char* argv[])
         for (auto& b : boids)
         {
             b.update();
+            if (b.closeToEdges(ctx))
+            {
+                b.setVelocity(-b.getVelocity());
+            }
             b.draw(ctx);
         }
         ctx.circle(

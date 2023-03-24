@@ -5,7 +5,7 @@
 using vec = glm::vec2;
 
 Boid::Boid()
-    : m_position(vec{0.f}), m_velocity(p6::random::point() * vec{0.01}), m_acceleration(vec{0.f}){};
+    : m_position(vec{0.f}), m_velocity(p6::random::point() * vec{0.01f}), m_acceleration(vec{0.f}){};
 
 Boid::Boid(const Boid& b)
     : m_position(b.m_position), m_velocity(b.m_velocity), m_acceleration(b.m_acceleration){};
@@ -23,6 +23,9 @@ void Boid::update()
 {
     m_position += m_velocity;
     m_velocity += m_acceleration;
-    normalize(m_position);
-    normalize(m_velocity);
+};
+
+bool Boid::closeToEdges(p6::Context& ctx) const
+{
+    return m_position.x <= -ctx.aspect_ratio() + 0.05 || m_position.x >= ctx.aspect_ratio() - 0.05 || m_position.y <= -1 + 0.05 || m_position.y >= 1 - 0.05;
 };
