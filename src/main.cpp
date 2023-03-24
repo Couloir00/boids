@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
     auto ctx = p6::Context{{.title = "giveItATry"}};
     ctx.maximize_window();
 
-    float WindowRatio = ctx.aspect_ratio();
+    // float WindowRatio = ctx.aspect_ratio();
 
     // vector of numberBoids boids
     std::vector<Boid> boids;
