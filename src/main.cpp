@@ -30,8 +30,8 @@ int main(int argc, char* argv[])
     // float WindowRatio = ctx.aspect_ratio();
 
     // vector of numberBoids boids
-    std::vector<Boid> boids;
-    int               numberBoids = 100;
+    static std::vector<Boid> boids;
+    int                      numberBoids = 100;
     boids.reserve(numberBoids);
     for (int i = 0; i < numberBoids; i++)
     {
@@ -43,6 +43,7 @@ int main(int argc, char* argv[])
         ctx.background(p6::NamedColor::Blue);
         for (auto& b : boids)
         {
+            b.flock(boids);
             b.update();
             if (b.closeToEdges(ctx))
             {
