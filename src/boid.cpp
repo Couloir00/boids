@@ -1,5 +1,4 @@
 #include "boid.hpp"
-#include <corecrt_wstdio.h>
 #include <vector>
 #include "glm/fwd.hpp"
 #include "glm/geometric.hpp"
@@ -16,10 +15,10 @@ Boid::Boid(const Boid& b)
 Boid::Boid(vec pos, vec vel, vec acc, float force, float speed)
     : m_position(pos), m_velocity(vel), m_acceleration(acc), m_maxForce(force), m_maxSpeed(speed){};
 
-void Boid::draw(p6::Context& ctx)
+void Boid::draw(p6::Context& ctx, float radius)
 {
     ctx.fill = {1.f};
-    ctx.circle(p6::Center{m_position}, p6::Radius{0.05});
+    ctx.circle(p6::Center{m_position}, p6::Radius{radius});
 };
 
 void Boid::update()
@@ -106,7 +105,7 @@ vec Boid::separation(const std::vector<Boid>& boids)
         if (&other != this && d < perception)
         {
             vec difference = m_position - other.m_position;
-            difference /= d;
+            difference /= (d * d);
             steering += difference;
             total++;
         }
@@ -149,27 +148,27 @@ void Boid::flock(const std::vector<Boid>& boids, float alignmentIntensity, float
     // m_acceleration = separation;
 }
 
-void Boid::avoidEdges(p6::Context& ctx)
+void Boid::avoidEdges(p6::Context& ctx, float radius)
 {
-    if (m_position.x <= -ctx.aspect_ratio() + 0.05)
+    if (m_position.x <= -ctx.aspect_ratio() + radius)
     {
-        m_position.x = ctx.aspect_ratio() - 0.05;
+        m_position.x = ctx.aspect_ratio() - radius;
     }
-    else if (m_position.x >= ctx.aspect_ratio() - 0.05)
+    else if (m_position.x >= ctx.aspect_ratio() - radius)
     {
-        m_position.x = -ctx.aspect_ratio() + 0.05;
+        m_position.x = -ctx.aspect_ratio() + radius;
     }
-    else if (m_position.y <= -1 + 0.05)
+    else if (m_position.y <= -1 + radius)
     {
-        m_position.y = 1 - 0.05;
+        m_position.y = 1 - radius;
     }
-    else if (m_position.y >= 1 - 0.05)
+    else if (m_position.y >= 1 - radius)
     {
-        m_position.y = -1 + 0.05;
+        m_position.y = -1 + radius;
     }
 }
 
-bool Boid::closeToEdges(p6::Context& ctx) const
+bool Boid::closeToEdges(p6::Context& ctx, float radius) const
 {
-    return m_position.x <= -ctx.aspect_ratio() + 0.05 || m_position.x >= ctx.aspect_ratio() - 0.05 || m_position.y <= -1 + 0.05 || m_position.y >= 1 - 0.05;
+    return m_position.x <= -ctx.aspect_ratio() + radius || m_position.x >= ctx.aspect_ratio() - radius || m_position.y <= -1 + radius || m_position.y >= 1 - radius;
 };

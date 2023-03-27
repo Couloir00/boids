@@ -32,7 +32,8 @@ int main(int argc, char* argv[])
 
     // vector of numberBoids boids
     static std::vector<Boid> boids;
-    int                      numberBoids = 2;
+    int                      numberBoids = 100;
+    float                    radius      = 0.05f;
     boids.reserve(numberBoids);
     for (int i = 0; i < numberBoids; i++)
     {
@@ -46,21 +47,24 @@ int main(int argc, char* argv[])
         ctx.background(p6::NamedColor::Blue);
 
         ImGui::Begin("Sliders");
+        ImGui::Text("Behaviors");
         ImGui::SliderFloat("Alignement", &alignmentIntensity, 0.00f, 1.f);
         ImGui::SliderFloat("Cohesion", &cohesionIntensity, 0.00f, 1.f);
         ImGui::SliderFloat("Separation", &separationIntensity, 0.00f, 1.f);
+        ImGui::Text("Boids");
+        ImGui::SliderFloat("Radius", &radius, 0.001f, 1.f);
         ImGui::End();
 
         for (auto& b : boids)
         {
-            b.avoidEdges(ctx);
+            b.avoidEdges(ctx, radius);
             b.flock(boids, alignmentIntensity, cohesionIntensity, separationIntensity);
             b.update();
             // if (b.closeToEdges(ctx))
             // {
             //     b.setVelocity(-b.getVelocity());
             // }
-            b.draw(ctx);
+            b.draw(ctx, radius);
         }
         ctx.circle(
             p6::Center{ctx.mouse()},

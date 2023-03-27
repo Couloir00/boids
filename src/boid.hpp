@@ -21,14 +21,14 @@ public:
     Boid(vec position, vec velocity, vec acceleration, float force, float speed);
     ~Boid() = default;
     void update();
-    void draw(p6::Context& ctx);
-    bool closeToEdges(p6::Context& ctx) const;
+    void draw(p6::Context& ctx, float radius);
+    bool closeToEdges(p6::Context& ctx, float radius) const;
     vec  align(const std::vector<Boid>& boids);
     vec  cohesion(const std::vector<Boid>& boids);
     vec  separation(const std::vector<Boid>& boids);
     void flock(const std::vector<Boid>& boids, float alignmentIntensity, float cohesionIntensity, float separationIntensity);
 
-    void avoidEdges(p6::Context& ctx);
+    void avoidEdges(p6::Context& ctx, float radius);
 
     vec inline setVelocity(vec vel) { return m_velocity = vel; }
     vec inline getVelocity() { return m_velocity; }
