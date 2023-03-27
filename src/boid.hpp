@@ -24,7 +24,11 @@ public:
     void draw(p6::Context& ctx);
     bool closeToEdges(p6::Context& ctx) const;
     vec  align(const std::vector<Boid>& boids);
-    void flock(const std::vector<Boid>& boids);
+    vec  cohesion(const std::vector<Boid>& boids);
+    vec  separation(const std::vector<Boid>& boids);
+    void flock(const std::vector<Boid>& boids, float alignmentIntensity, float cohesionIntensity, float separationIntensity);
+
+    void avoidEdges(p6::Context& ctx);
 
     vec inline setVelocity(vec vel) { return m_velocity = vel; }
     vec inline getVelocity() { return m_velocity; }

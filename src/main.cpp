@@ -6,6 +6,7 @@
 #include "boid.hpp"
 #include "doctest/doctest.h"
 #include "glm/fwd.hpp"
+#include "imgui.h"
 
 // TO DO normaliser la fenêtre et faire en sorte que les boids restent dedans puis poursuivre avec la vidéo
 // The coding train https://www.youtube.com/watch?v=mhjuuHl6qHM&t=276s 9min
@@ -31,24 +32,34 @@ int main(int argc, char* argv[])
 
     // vector of numberBoids boids
     static std::vector<Boid> boids;
-    int                      numberBoids = 100;
+    int                      numberBoids = 2;
     boids.reserve(numberBoids);
     for (int i = 0; i < numberBoids; i++)
     {
         boids.emplace_back();
     }
-
+    float alignmentIntensity  = 0.f;
+    float cohesionIntensity   = 0.f;
+    float separationIntensity = 0.f;
     // Declare your infinite update loop.
     ctx.update = [&]() {
         ctx.background(p6::NamedColor::Blue);
+
+        ImGui::Begin("Sliders");
+        ImGui::SliderFloat("Alignement", &alignmentIntensity, 0.00f, 1.f);
+        ImGui::SliderFloat("Cohesion", &cohesionIntensity, 0.00f, 1.f);
+        ImGui::SliderFloat("Separation", &separationIntensity, 0.00f, 1.f);
+        ImGui::End();
+
         for (auto& b : boids)
         {
-            b.flock(boids);
+            b.avoidEdges(ctx);
+            b.flock(boids, alignmentIntensity, cohesionIntensity, separationIntensity);
             b.update();
-            if (b.closeToEdges(ctx))
-            {
-                b.setVelocity(-b.getVelocity());
-            }
+            // if (b.closeToEdges(ctx))
+            // {
+            //     b.setVelocity(-b.getVelocity());
+            // }
             b.draw(ctx);
         }
         ctx.circle(
