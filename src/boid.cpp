@@ -7,7 +7,7 @@
 using vec = glm::vec2;
 
 Boid::Boid()
-    : m_position(p6::random::point()), m_velocity(p6::random::point() * vec{0.01f}), m_acceleration(vec{0.f}), m_maxForce(0.2), m_maxSpeed(10){};
+    : m_position(p6::random::point()), m_velocity(p6::random::point() * vec{0.01f}), m_acceleration(vec{0.f}), m_maxForce(0.01), m_maxSpeed(0.01){};
 
 Boid::Boid(const Boid& b)
     : m_position(b.m_position), m_velocity(b.m_velocity), m_acceleration(b.m_acceleration), m_maxForce(b.m_maxForce), m_maxSpeed(b.m_maxSpeed){};
@@ -32,7 +32,7 @@ void Boid::update()
 
 vec Boid::align(const std::vector<Boid>& boids) // float alignmentRadius, float alignmentStrength)
 {
-    float perception = 0.1f;
+    float perception = 0.5f;
     vec   steering   = vec{0.f};
     int   total      = 0;
     for (auto& other : boids)
@@ -47,25 +47,26 @@ vec Boid::align(const std::vector<Boid>& boids) // float alignmentRadius, float 
     if (total > 0)
     {
         steering /= static_cast<float>(total);
-        // set magnitude to control Speed
-        if (glm::length(steering) > m_maxSpeed)
-        {
-            steering = glm::normalize(steering) * m_maxSpeed;
-        }
+        steering = glm::normalize(steering);
+        // // set magnitude to control Speed
+        // if (glm::length(steering) > m_maxSpeed)
+        // {
+        //     steering = glm::normalize(steering) * m_maxSpeed;
+        // }
 
-        steering -= m_velocity;
-        // limit force
-        if (glm::length(steering) > m_maxForce)
-        {
-            steering = glm::normalize(steering) * m_maxForce;
-        }
+        // steering -= m_velocity;
+        // // limit force
+        // if (glm::length(steering) > m_maxForce)
+        // {
+        //     steering = glm::normalize(steering) * m_maxForce;
+        // }
     }
     return steering;
 };
 
 vec Boid::cohesion(const std::vector<Boid>& boids)
 {
-    float perception = 0.01f;
+    float perception = 0.1f;
     vec   steering   = vec{0.f};
     int   total      = 0;
     for (const auto& other : boids)
@@ -81,22 +82,22 @@ vec Boid::cohesion(const std::vector<Boid>& boids)
     {
         steering /= static_cast<float>(total);
         steering -= m_position;
-        if (glm::length(steering) > m_maxSpeed)
-        {
-            steering = glm::normalize(steering) * m_maxSpeed;
-        }
-        steering -= m_velocity;
-        if (glm::length(steering) > m_maxForce)
-        {
-            steering = glm::normalize(steering) * m_maxForce;
-        }
+        // if (glm::length(steering) > m_maxSpeed)
+        // {
+        //     steering = glm::normalize(steering) * m_maxSpeed;
+        // }
+        // steering -= m_velocity;
+        // if (glm::length(steering) > m_maxForce)
+        // {
+        //     steering = glm::normalize(steering) * m_maxForce;
+        // }
     }
     return steering;
 };
 
 vec Boid::separation(const std::vector<Boid>& boids)
 {
-    float perception = 0.1f;
+    float perception = .1f;
     vec   steering   = vec{0.f};
     int   total      = 0;
     for (auto& other : boids)
@@ -113,15 +114,16 @@ vec Boid::separation(const std::vector<Boid>& boids)
     if (total > 0)
     {
         steering /= static_cast<float>(total);
-        if (glm::length(steering) > m_maxSpeed)
-        {
-            steering = glm::normalize(steering) * m_maxSpeed;
-        }
-        steering -= m_velocity;
-        if (glm::length(steering) > m_maxForce)
-        {
-            steering = glm::normalize(steering) * m_maxForce;
-        }
+        steering = glm::normalize(steering);
+        // if (glm::length(steering) > m_maxSpeed)
+        // {
+        //     steering = glm::normalize(steering) * m_maxSpeed;
+        // }
+        // steering -= m_velocity;
+        // if (glm::length(steering) > m_maxForce)
+        // {
+        //     steering = glm::normalize(steering) * m_maxForce;
+        // }
     }
     return steering;
 }
@@ -135,6 +137,7 @@ void Boid::flock(const std::vector<Boid>& boids, float alignmentIntensity, float
     m_velocity += alignment;
     m_velocity += cohesion;
     m_velocity += separation;
+    m_velocity = glm::normalize(m_velocity);
 
     // limit velocity
     if (glm::length(m_velocity) > m_maxSpeed)
