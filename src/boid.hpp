@@ -9,24 +9,28 @@ using vec = glm::vec2;
 
 class Boid {
 private:
-    vec   m_position;
-    vec   m_velocity;
-    vec   m_acceleration;
-    float m_maxForce;
-    float m_maxSpeed;
+    vec m_position;
+    vec m_velocity;
+    vec m_direction;
 
 public:
+    static float alignmentIntensity, cohesionIntensity, separationIntensity, perception;
+
     Boid();
     Boid(const Boid& b);
-    Boid(vec position, vec velocity, vec acceleration, float force, float speed);
+    Boid(vec position, vec velocity, vec direction);
     ~Boid() = default;
-    void update();
+
+    std::vector<Boid> searchNeighbors(const std::vector<Boid>& boids);
+
     void draw(p6::Context& ctx, float radius);
     bool closeToEdges(p6::Context& ctx, float radius) const;
-    vec  align(const std::vector<Boid>& boids);
-    vec  cohesion(const std::vector<Boid>& boids);
-    vec  separation(const std::vector<Boid>& boids);
-    void flock(const std::vector<Boid>& boids, float alignmentIntensity, float cohesionIntensity, float separationIntensity);
+
+    vec align(const std::vector<Boid>& boids);
+    vec cohesion(const std::vector<Boid>& boids);
+    vec separation(const std::vector<Boid>& boids);
+
+    void flock(const std::vector<Boid>& boids, p6::Context& ctx);
 
     void avoidEdges(p6::Context& ctx, float radius);
 

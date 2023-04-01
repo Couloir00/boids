@@ -8,10 +8,12 @@
 #include "glm/fwd.hpp"
 #include "imgui.h"
 
-// TO DO normaliser la fenêtre et faire en sorte que les boids restent dedans puis poursuivre avec la vidéo
-// The coding train https://www.youtube.com/watch?v=mhjuuHl6qHM&t=276s 9min
-
 using vec = glm::vec2;
+
+float Boid::alignmentIntensity  = 0.5f;
+float Boid::cohesionIntensity   = 0.5f;
+float Boid::separationIntensity = 0.5f;
+float Boid::perception          = 0.5f;
 
 int main(int argc, char* argv[])
 {
@@ -28,8 +30,6 @@ int main(int argc, char* argv[])
     auto ctx = p6::Context{{.title = "giveItATry"}};
     ctx.maximize_window();
 
-    // float WindowRatio = ctx.aspect_ratio();
-
     // vector of numberBoids boids
     static std::vector<Boid> boids;
     int                      numberBoids = 100;
@@ -39,31 +39,29 @@ int main(int argc, char* argv[])
     {
         boids.emplace_back();
     }
-    float alignmentIntensity  = 0.f;
-    float cohesionIntensity   = 0.f;
-    float separationIntensity = 0.f;
+
     // Declare your infinite update loop.
     ctx.update = [&]() {
         ctx.background(p6::NamedColor::Blue);
 
         ImGui::Begin("Sliders");
         ImGui::Text("Behaviors");
-        ImGui::SliderFloat("Alignement", &alignmentIntensity, 0.00f, 1.f);
-        ImGui::SliderFloat("Cohesion", &cohesionIntensity, 0.00f, 1.f);
-        ImGui::SliderFloat("Separation", &separationIntensity, 0.00f, 1.f);
+        ImGui::SliderFloat("Alignement", &Boid::alignmentIntensity, 0.00f, 1.f);
+        ImGui::SliderFloat("Cohesion", &Boid::cohesionIntensity, 0.00f, 1.f);
+        ImGui::SliderFloat("Separation", &Boid::separationIntensity, 0.00f, 1.f);
         ImGui::Text("Boids");
         ImGui::SliderFloat("Radius", &radius, 0.001f, 1.f);
+        ImGui::SliderFloat("Perception", &Boid::perception, 0.001f, 10.f);
         ImGui::End();
 
         for (auto& b : boids)
         {
             b.avoidEdges(ctx, radius);
-            b.flock(boids, alignmentIntensity, cohesionIntensity, separationIntensity);
-            b.update();
-            // if (b.closeToEdges(ctx))
-            // {
-            //     b.setVelocity(-b.getVelocity());
-            // }
+            b.flock(boids, ctx);
+            //  if (b.closeToEdges(ctx))
+            //  {
+            //      b.setVelocity(-b.getVelocity());
+            //  }
             b.draw(ctx, radius);
         }
         ctx.circle(
