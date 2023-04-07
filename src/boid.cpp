@@ -9,10 +9,10 @@
 // TO DO Vérifier la fonction flock, enlever l'acceleration
 // Voir pour mettre une séparation minimale de radius, pour faire un slider pour le nombre de boids
 
-using vec = glm::vec2;
+using vec = glm::vec3;
 
 Boid::Boid()
-    : m_position(p6::random::point()), m_velocity(p6::random::direction()), m_direction(p6::random::direction()){};
+    : m_position(vec(p6::random::point(), -10.f)), m_velocity(vec(p6::random::direction(), -10.f)), m_direction(vec(p6::random::direction(), -10.f)){};
 
 Boid::Boid(const Boid& b)
     : m_position(b.m_position), m_velocity(b.m_velocity), m_direction(b.m_direction){};

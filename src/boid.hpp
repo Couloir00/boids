@@ -5,7 +5,7 @@
 #include "glm/fwd.hpp"
 #include "p6/p6.h"
 
-using vec = glm::vec2;
+using vec = glm::vec3;
 
 class Boid {
 private:

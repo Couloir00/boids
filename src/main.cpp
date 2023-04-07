@@ -8,7 +8,7 @@
 #include "glm/fwd.hpp"
 #include "imgui.h"
 
-using vec = glm::vec2;
+// using vec = glm::vec3;
 
 float Boid::alignmentIntensity  = 0.5f;
 float Boid::cohesionIntensity   = 0.5f;
