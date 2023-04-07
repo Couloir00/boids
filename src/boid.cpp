@@ -123,5 +123,5 @@ void Boid::avoidEdges(p6::Context& ctx, float radius)
 
 bool Boid::closeToEdges(p6::Context& ctx, float radius) const
 {
-    return m_position.x <= -ctx.aspect_ratio() + radius || m_position.x >= ctx.aspect_ratio() - radius || m_position.y <= -1 + radius || m_position.y >= 1 - radius;
+    return m_position.x <= -ctx.aspect_ratio() || m_position.x >= ctx.aspect_ratio() || m_position.y <= -1 || m_position.y >= 1;
 };
