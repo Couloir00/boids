@@ -57,7 +57,7 @@ int main(int argc, char* argv[])
     ctx.update = [&]() {
         ctx.background(p6::NamedColor::Blue);
 
-        // Boids shape
+        // mouse
         ctx.circle(
             p6::Center{ctx.mouse()},
             p6::Radius{0.2f}
