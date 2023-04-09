@@ -1,4 +1,4 @@
-#include "boid.hpp"
+#include "Boid/boid.hpp"
 #include <glm/gtc/random.hpp>
 #include <vector>
 #include "glm/fwd.hpp"
@@ -26,13 +26,18 @@ void Boid::draw(p6::Context& ctx, float radius)
     ctx.circle(p6::Center{m_position}, p6::Radius{radius});
 };
 
+void Boid::setIntensities(Intensity intensities)
+{
+    m_intensities = intensities;
+}
+
 std::vector<Boid> Boid::searchNeighbors(const std::vector<Boid>& boids)
 {
     std::vector<Boid> neighbors{};
-    for (auto& other : boids)
+    for (const auto& other : boids)
     {
         float distance = glm::distance(m_position, other.m_position);
-        if (&other != this && distance <= perception)
+        if (&other != this && distance <= m_intensities.m_perceptionIntensity)
         {
             neighbors.emplace_back(other);
         }
@@ -43,11 +48,11 @@ std::vector<Boid> Boid::searchNeighbors(const std::vector<Boid>& boids)
 vec Boid::align(const std::vector<Boid>& neighbors)
 {
     vec alignment = vec{0.f};
-    for (auto& boid : neighbors)
+    for (const auto& boid : neighbors)
     {
         alignment += boid.m_direction;
     }
-    if (neighbors.size() > 0)
+    if (!neighbors.empty())
     {
         alignment = glm::normalize(alignment);
     }
@@ -61,7 +66,7 @@ vec Boid::cohesion(const std::vector<Boid>& neighbors)
     {
         cohesion += boid.m_position;
     }
-    if (neighbors.size() > 0)
+    if (!neighbors.empty())
     {
         cohesion /= static_cast<float>(neighbors.size());
         cohesion -= m_position;
@@ -73,13 +78,13 @@ vec Boid::cohesion(const std::vector<Boid>& neighbors)
 vec Boid::separation(const std::vector<Boid>& neighbors)
 {
     vec separation = vec{0.f};
-    for (auto& boid : neighbors)
+    for (const auto& boid : neighbors)
     {
         vec difference = m_position - boid.m_position;
-        if (difference.length() > 0)
-            separation += glm::normalize(difference) / static_cast<float>(difference.length());
+        if (vec::length() > 0)
+            separation += glm::normalize(difference) / static_cast<float>(vec::length());
     }
-    if (neighbors.size() > 0)
+    if (!neighbors.empty())
     {
         separation = glm::normalize(separation);
     }
@@ -88,11 +93,11 @@ vec Boid::separation(const std::vector<Boid>& neighbors)
 
 void Boid::flock(const std::vector<Boid>& boids, p6::Context& ctx)
 {
-    vec cohesion = this->cohesion(searchNeighbors(boids)) * vec{cohesionIntensity};
+    vec cohesion = this->cohesion(searchNeighbors(boids)) * vec{m_intensities.m_cohesionIntensity};
 
-    vec alignment = this->align(searchNeighbors(boids)) * vec{alignmentIntensity};
+    vec alignment = this->align(searchNeighbors(boids)) * vec{m_intensities.m_alignmentIntensity};
 
-    vec separation = this->separation(searchNeighbors(boids)) * vec{separationIntensity};
+    vec separation = this->separation(searchNeighbors(boids)) * vec{m_intensities.m_separationIntensity};
 
     m_direction += cohesion + alignment + separation;
     m_direction = glm::normalize(m_direction);
@@ -121,7 +126,7 @@ void Boid::avoidEdges(p6::Context& ctx, float radius)
     }
 }
 
-bool Boid::closeToEdges(p6::Context& ctx, float radius) const
+bool Boid::closeToEdges(p6::Context& ctx, float /*radius*/) const
 {
     return m_position.x <= -ctx.aspect_ratio() || m_position.x >= ctx.aspect_ratio() || m_position.y <= -1 || m_position.y >= 1;
 };

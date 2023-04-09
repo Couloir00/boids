@@ -2,6 +2,7 @@
 #define __BOID_HPP_
 
 #include <vector>
+#include "Intensity/Intensity.hpp"
 #include "glm/fwd.hpp"
 #include "p6/p6.h"
 
@@ -9,13 +10,12 @@ using vec = glm::vec3;
 
 class Boid {
 private:
-    vec m_position;
-    vec m_velocity;
-    vec m_direction;
+    vec       m_position;
+    vec       m_velocity;
+    vec       m_direction;
+    Intensity m_intensities{};
 
 public:
-    static float alignmentIntensity, cohesionIntensity, separationIntensity, perception;
-
     Boid();
     Boid(const Boid& b);
     Boid(vec position, vec velocity, vec direction);
@@ -24,11 +24,12 @@ public:
     std::vector<Boid> searchNeighbors(const std::vector<Boid>& boids);
 
     void draw(p6::Context& ctx, float radius);
+    void setIntensities(Intensity intensities);
     bool closeToEdges(p6::Context& ctx, float radius) const;
 
-    vec align(const std::vector<Boid>& boids);
-    vec cohesion(const std::vector<Boid>& boids);
-    vec separation(const std::vector<Boid>& boids);
+    vec align(const std::vector<Boid>& neighbors);
+    vec cohesion(const std::vector<Boid>& neighbors);
+    vec separation(const std::vector<Boid>& neighbors);
 
     void flock(const std::vector<Boid>& boids, p6::Context& ctx);
 
