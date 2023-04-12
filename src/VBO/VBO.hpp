@@ -8,7 +8,7 @@ private:
 
 public:
     // vao constructor
-    VBO() { glGenVertexArrays(1, &m_vboId); }
+    VBO() { glGenBuffers(1, &m_vboId); }
 
     // vbo destructor
     ~VBO() { glDeleteBuffers(1, &m_vboId); }
