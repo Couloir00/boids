@@ -45,7 +45,6 @@ glm::mat4 FreeflyCamera::getViewMatrix() const
 void cameraKeyControls(const p6::Key& key, FreeflyCamera& camera)
 {
     // For QWERTY Keyboards
-
     if (key.physical == GLFW_KEY_A)
     {
         camera.moveLeft(1.f);

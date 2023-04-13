@@ -1,13 +1,16 @@
-
-#include "p6/p6.h"
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <cstdlib>
 #include <vector>
 #include "Boid/boid.hpp"
+#include "Camera/FreeflyCamera.hpp"
 #include "Intensity/Intensity.hpp"
+#include "Model/Model.hpp"
+#include "Model/ModelControls.hpp"
 #include "doctest/doctest.h"
+#include "glm/ext/vector_float3.hpp"
 #include "glm/fwd.hpp"
 #include "imgui.h"
+#include "p6/p6.h"
 
 int main(int argc, char* argv[])
 {
@@ -52,10 +55,26 @@ int main(int argc, char* argv[])
         ImGui::SliderFloat("Radius", &radius, 0.001f, 1.f);
         ImGui::End();
     };
+    // shaders
+    const p6::Shader myShaders = p6::load_shader("Shaders/3D.vs.glsl", "Shaders/normals.fs.glsl");
+    // camera
+    FreeflyCamera camera;
+    // Model init test
+    Model test("assets/new-graveyard.obj");
+
+    test.modelLoad();
+    test.modelInitialize();
 
     // Declare your infinite update loop.
     ctx.update = [&]() {
-        ctx.background(p6::NamedColor::Blue);
+        ModelControls controls{glm::vec3(-1.23f, 0.f, -1), glm::vec3(0.01, 0, 2), 0.1};
+        // ctx.background(p6::NamedColor::Blue);
+        glClearColor(1.000f, 0.662f, 0.970f, 1.000f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        myShaders.use();
+        glm::mat4 ProjMatrix = glm::perspective(glm::radians(70.f), ctx.aspect_ratio(), 0.1f, 100.f);
+        glm::mat4 ViewMatrix = camera.getViewMatrix();
 
         // mouse
         ctx.circle(
@@ -63,17 +82,21 @@ int main(int argc, char* argv[])
             p6::Radius{0.2f}
         );
 
+        test.modelDraw(myShaders, ViewMatrix, controls, ProjMatrix);
+
         for (auto& b : boids)
         {
             b.avoidEdges(ctx, radius);
             b.flock(boids, ctx); // updating the boids here
-            //  if (b.closeToEdges(ctx))
-            //  {
-            //      b.setVelocity(-b.getVelocity());
-            //  }
             b.draw(ctx, radius);
         }
     };
+    // camera to fix
+    /*
+    ctx.key_pressed = [&](const p6::Key& key) {
+        cameraControls(key, camera);
+    };*/
+
     // Should be done last. It starts the infinite loop.
     ctx.start();
 }
