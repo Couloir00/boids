@@ -55,26 +55,47 @@ int main(int argc, char* argv[])
         ImGui::SliderFloat("Radius", &radius, 0.001f, 1.f);
         ImGui::End();
     };
+
+    /// INIT///
+    glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_CULL_FACE);
+
     // shaders
     const p6::Shader myShaders = p6::load_shader("Shaders/3D.vs.glsl", "Shaders/normals.fs.glsl");
     // camera
     FreeflyCamera camera;
     // Model init test
-    Model test("assets/new-graveyard.obj");
+    Model test("assets/ghost.obj");
 
     test.modelLoad();
     test.modelInitialize();
 
+    // camera controls checker
+    bool Z = false;
+    bool Q = false;
+    bool S = false;
+    bool D = false;
+
     // Declare your infinite update loop.
     ctx.update = [&]() {
-        ModelControls controls{glm::vec3(-1.23f, 0.f, -1), glm::vec3(0.01, 0, 2), 0.1};
+        ModelControls controls{glm::vec3(0.f, 0.f, -1.5), glm::vec3(0.01, 0, 2), 1.f};
         // ctx.background(p6::NamedColor::Blue);
-        glClearColor(1.000f, 0.662f, 0.970f, 1.000f);
+        // glClearColor(1.000f, 0.662f, 0.970f, 1.000f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         myShaders.use();
         glm::mat4 ProjMatrix = glm::perspective(glm::radians(70.f), ctx.aspect_ratio(), 0.1f, 100.f);
         glm::mat4 ViewMatrix = camera.getViewMatrix();
+
+        // camera moving
+        if (Z)
+            camera.moveFront(0.1f);
+        if (Q)
+            camera.moveLeft(0.1);
+        if (S)
+            camera.moveFront(-0.1);
+        if (D)
+            camera.moveLeft(-0.1);
 
         // mouse
         ctx.circle(
@@ -91,11 +112,49 @@ int main(int argc, char* argv[])
             b.draw(ctx, radius);
         }
     };
-    // camera to fix
-    /*
-    ctx.key_pressed = [&](const p6::Key& key) {
-        cameraControls(key, camera);
-    };*/
+
+    ctx.key_pressed = [&Z, &Q, &S, &D](const p6::Key& key) {
+        if (key.physical == GLFW_KEY_W)
+        {
+            Z = true;
+        }
+        if (key.physical == GLFW_KEY_A)
+        {
+            Q = true;
+        }
+        if (key.physical == GLFW_KEY_S)
+        {
+            S = true;
+        }
+        if (key.physical == GLFW_KEY_D)
+        {
+            D = true;
+        }
+    };
+
+    ctx.key_released = [&Z, &Q, &S, &D](const p6::Key& key) {
+        if (key.physical == GLFW_KEY_W)
+        {
+            Z = false;
+        }
+        if (key.physical == GLFW_KEY_A)
+        {
+            Q = false;
+        }
+        if (key.physical == GLFW_KEY_S)
+        {
+            S = false;
+        }
+        if (key.physical == GLFW_KEY_D)
+        {
+            D = false;
+        }
+    };
+
+    ctx.mouse_dragged = [&](p6::MouseDrag drag) {
+        camera.rotateLeft(drag.delta.x * 25.f);
+        camera.rotateUp(drag.delta.y * 25.f);
+    };
 
     // Should be done last. It starts the infinite loop.
     ctx.start();

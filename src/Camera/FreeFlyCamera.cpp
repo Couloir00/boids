@@ -37,14 +37,21 @@ void FreeflyCamera::rotateLeft(float degrees)
     computeDirectionVectors();
 }
 
+void FreeflyCamera::rotateUp(float degrees)
+{
+    m_Theta += glm::radians(degrees);
+    computeDirectionVectors();
+}
+
 glm::mat4 FreeflyCamera::getViewMatrix() const
 {
     return glm::lookAt(m_Position, m_Position + m_FrontVector, m_UpVector);
 }
 
-void cameraKeyControls(const p6::Key& key, FreeflyCamera& camera)
+void cameraControls(const p6::Key& key, FreeflyCamera& camera)
 {
     // For QWERTY Keyboards
+
     if (key.physical == GLFW_KEY_A)
     {
         camera.moveLeft(1.f);

@@ -24,5 +24,4 @@ public:
 };
 
 void cameraControls(const p6::Key& key, FreeflyCamera& freeCamera);
-
 #endif
