@@ -6,6 +6,8 @@
 #include "Intensity/Intensity.hpp"
 #include "Model/Model.hpp"
 #include "Model/ModelControls.hpp"
+#include "Sphere/common.hpp"
+#include "Sphere/sphere_vertices.hpp"
 #include "doctest/doctest.h"
 #include "glm/ext/vector_float3.hpp"
 #include "glm/fwd.hpp"
@@ -26,12 +28,12 @@ int main(int argc, char* argv[])
     // Actual app
     auto ctx = p6::Context{{.title = "giveItATry"}};
     ctx.maximize_window();
-
     // vector of numberBoids boids
-    static std::vector<Boid> boids;
-    int                      numberBoids = 100;
-    float                    radius      = 0.05f;
-    Intensity                intensities{0.5f, 0.5f, 0.5f, 0.5f};
+    static std::vector<Boid>
+              boids;
+    int       numberBoids = 100;
+    float     radius      = 0.05f;
+    Intensity intensities{0.5f, 0.5f, 0.5f, 0.5f};
     boids.reserve(numberBoids);
     for (int i = 0; i < numberBoids; i++)
     {
