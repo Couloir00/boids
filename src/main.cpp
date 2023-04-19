@@ -67,7 +67,7 @@ int main(int argc, char* argv[])
     // camera
     FreeflyCamera camera;
     // Model init test
-    Model test("assets/ghost.obj");
+    Model test("Assets/ghost.obj");
 
     test.modelLoad();
     test.modelInitialize();

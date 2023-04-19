@@ -55,8 +55,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE p6::p6)
 set_target_properties(${PROJECT_NAME} PROPERTIES
 RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${PROJECT_NAME})
 
-# ---Add assets folder---
-Cool__target_copy_folder(${PROJECT_NAME} assets)
-
-# ---Add shaders folder---
+# ---Add assets folder and shaders
+Cool__target_copy_folder(${PROJECT_NAME} Assets)
 Cool__target_copy_folder(${PROJECT_NAME} Shaders)
