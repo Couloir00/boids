@@ -2,10 +2,9 @@
 #define __INTENSITY_HPP_
 
 struct Intensity {
-    float m_separationIntensity = 0.5f;
-    float m_cohesionIntensity   = 0.5f;
-    float m_alignmentIntensity  = 0.5f;
-    float m_perceptionIntensity = 0.5f;
-    bool  isGui();
+    float separationIntensity = 0.5f;
+    float cohesionIntensity   = 0.5f;
+    float alignmentIntensity  = 0.5f;
+    float perceptionIntensity = 0.5f;
 };
 #endif

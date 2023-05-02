@@ -26,18 +26,13 @@ void Boid::draw(p6::Context& ctx, float radius)
     ctx.circle(p6::Center{m_position}, p6::Radius{radius});
 };
 
-void Boid::setIntensities(Intensity intensities)
-{
-    m_intensities = intensities;
-}
-
-std::vector<Boid> Boid::searchNeighbors(const std::vector<Boid>& boids)
+std::vector<Boid> Boid::searchNeighbors(const std::vector<Boid>& boids, const Intensity& intensity)
 {
     std::vector<Boid> neighbors{};
     for (const auto& other : boids)
     {
         float distance = glm::distance(m_position, other.m_position);
-        if (&other != this && distance <= m_intensities.m_perceptionIntensity)
+        if (&other != this && distance <= intensity.perceptionIntensity)
         {
             neighbors.emplace_back(other);
         }
@@ -91,13 +86,13 @@ vec Boid::separation(const std::vector<Boid>& neighbors)
     return separation;
 }
 
-void Boid::flock(const std::vector<Boid>& boids, p6::Context& ctx)
+void Boid::flock(const std::vector<Boid>& boids, p6::Context& ctx, const Intensity& intensity)
 {
-    vec cohesion = this->cohesion(searchNeighbors(boids)) * vec{m_intensities.m_cohesionIntensity};
+    vec cohesion = this->cohesion(searchNeighbors(boids, intensity)) * vec{intensity.cohesionIntensity};
 
-    vec alignment = this->align(searchNeighbors(boids)) * vec{m_intensities.m_alignmentIntensity};
+    vec alignment = this->align(searchNeighbors(boids, intensity)) * vec{intensity.alignmentIntensity};
 
-    vec separation = this->separation(searchNeighbors(boids)) * vec{m_intensities.m_separationIntensity};
+    vec separation = this->separation(searchNeighbors(boids, intensity)) * vec{intensity.separationIntensity};
 
     m_direction += cohesion + alignment + separation;
     m_direction = glm::normalize(m_direction);

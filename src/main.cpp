@@ -46,13 +46,11 @@ int main(int argc, char* argv[])
         ImGui::Text("Behaviors");
 
         // Intensity GUI
-        if (intensities.isGui())
-        {
-            for (auto& boid : boids)
-            {
-                boid.setIntensities(intensities);
-            }
-        }
+        ImGui::SliderFloat("Separation", &(intensities.separationIntensity), 0.00f, 1.f);
+        ImGui::SliderFloat("Cohesion", &(intensities.cohesionIntensity), 0.00f, 1.f);
+        ImGui::SliderFloat("Alignment", &(intensities.alignmentIntensity), 0.00f, 1.f);
+        ImGui::SliderFloat("Perception", &(intensities.perceptionIntensity), 0.001f, 10.f);
+
         ImGui::Text("Boids");
         ImGui::SliderFloat("Radius", &radius, 0.001f, 1.f);
         ImGui::End();
@@ -110,7 +108,7 @@ int main(int argc, char* argv[])
         for (auto& b : boids)
         {
             b.avoidEdges(ctx, radius);
-            b.flock(boids, ctx); // updating the boids here
+            b.flock(boids, ctx, intensities); // updating the boids here
             b.draw(ctx, radius);
         }
     };
