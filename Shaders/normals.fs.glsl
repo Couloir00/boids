@@ -1,8 +1,8 @@
 #version 330
 
 //input
-in vec3 vPosition_vs;
-in vec3 vNormal_vs;
+in vec3 vViewPosition;
+in vec3 vViewNormal;
 in vec2 vTexCoords;
 
 //output the color

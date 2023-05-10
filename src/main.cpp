@@ -61,7 +61,12 @@ int main(int argc, char* argv[])
     // glEnable(GL_CULL_FACE);
 
     // shaders
-    const p6::Shader myShaders = p6::load_shader("Shaders/3D.vs.glsl", "Shaders/normals.fs.glsl");
+    const p6::Shader myShaders = p6::load_shader("Shaders/3D.vs.glsl", "Shaders/ponctualLight.fs.glsl");
+    // light
+    glm::vec3 lightPos       = glm::vec3(0.0f, 1.0f, -3.0f);
+    glm::vec3 lightIntensity = glm::vec3(3.0f, 3.0f, 3.0f);
+    myShaders.set("uLightPos_vs", lightPos);
+    myShaders.set("uLightIntensity", lightIntensity);
     // camera
     FreeflyCamera camera;
     // Model init test
