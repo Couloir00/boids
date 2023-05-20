@@ -69,21 +69,26 @@ int main(int argc, char* argv[])
 
     // shaders
     const p6::Shader myShaders = p6::load_shader("Shaders/3D.vs.glsl", "Shaders/Light.fs.glsl");
-    /*// light
-    glm::vec3 lightPos       = glm::vec3(0.0f, 1.0f, -3.0f);
-    glm::vec3 lightIntensity = glm::vec3(3.0f, 3.0f, 3.0f);
-    myShaders.set("uLightPos_vs", lightPos);
-    myShaders.set("uLightIntensity", lightIntensity);*/
+
     // camera
     FreeflyCamera camera;
     img::Image    aTex = p6::load_image_buffer("Assets/remi.png");
     Texture       aTexture{};
     aTexture.initTexture(static_cast<int>(aTex.width()), static_cast<int>(aTex.height()), aTex.data(), GL_RGBA, GL_UNSIGNED_BYTE);
 
+    Texture                 cubemapTex;
+    std::vector<img::Image> Images;
+    p6::Shader              skyboxShader = p6::load_shader("Shaders/SkyboxEnv.vs.glsl", "Shaders/SkyboxEnv.fs.glsl");
+    VAO                     skyboxVAO;
+    VBO                     skyboxVBO;
+    generateSkybox(cubemapTex, Images, skyboxVAO, skyboxVBO);
+    skyboxShader.use();
+    skyboxShader.set("skybox", 0);
+
     // Model init test
     Model    test("Assets/ghost.obj");
     ModelLOD boidsModel({"Assets/ghost.obj", "Assets/Star-LOD2.obj"});
-    Model    ground("Assets/Ground.obj");
+    Model    ground("Assets/cube3.obj");
 
     // light
     //********************************************************************************************
@@ -132,6 +137,7 @@ int main(int argc, char* argv[])
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         myShaders.use();
+        myShaders.set("uUseTexture", false);
         glm::mat4  ProjMatrix = glm::perspective(glm::radians(70.f), ctx.aspect_ratio(), 0.1f, 100.f);
         glm::mat4  ViewMatrix = camera.getViewMatrix();
         const auto cameraPos  = glm::vec3(ViewMatrix[3]);
@@ -153,6 +159,7 @@ int main(int argc, char* argv[])
         const std::vector<ModelControls> boidControls = BoidsControls(boids, cameraPos);
 
         test.modelDraw(myShaders, ViewMatrix, controls, ProjMatrix);
+
         ground.modelDraw(myShaders, ViewMatrix, control, ProjMatrix);
 
         for (auto& b : boids)
@@ -164,6 +171,22 @@ int main(int argc, char* argv[])
         {
             boidsModel.modelLODDraw(myShaders, ViewMatrix, boid, ProjMatrix);
         }
+        myShaders.set("uUseTexture", true);
+        myShaders.set("uTexture", 1);
+        aTexture.activateTexture(1);
+
+        // skybox drawcall
+        glDepthFunc(GL_LEQUAL);
+        skyboxShader.use();
+        auto view = glm::mat4(glm::mat3(camera.getViewMatrix()));
+        skyboxShader.set("viewMatrix", view);
+        skyboxShader.set("projectionMatrix", ProjMatrix);
+        glBindVertexArray(skyboxVAO.getId());
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTex.getId());
+        glDrawArrays(GL_TRIANGLES, 0, 36);
+        glBindVertexArray(0);
+        glDepthFunc(GL_LESS);
     };
 
     ctx.key_pressed = [&Z, &Q, &S, &D, &SPACE, &CTRL](const p6::Key& key) {
