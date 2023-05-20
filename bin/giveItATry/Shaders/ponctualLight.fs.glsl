@@ -30,4 +30,4 @@ vec3 blinnPhong(){
 
 void main() {
     fFragColor = vec4(blinnPhong(),1.);
-};
+}

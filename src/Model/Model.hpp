@@ -23,6 +23,7 @@ private:
     std::vector<glm::vec3> m_outVertices;
     std::vector<glm::vec2> m_outUvs;
     std::vector<glm::vec3> m_outNormals;
+    std::vector<glm::vec3> m_outColors;
     std::string            m_modelPath;
 
     // defining a VAO
@@ -31,6 +32,7 @@ private:
     VBO m_vboPos;
     VBO m_vboNormals;
     VBO m_vboUVs;
+    VBO m_vboColor;
 
 public:
     // default construct, specify default or else we have an undefined reference :(
@@ -43,6 +45,9 @@ public:
     // read and load the model file
     void modelLoad();
     // draw the model
-    void modelDraw(const p6::Shader& myShader, const glm::mat4& viewMatrix, const ModelControls& controls, const glm::mat4& projectionMatrix);
+    void modelDraw(const p6::Shader& myShader, const glm::mat4& viewMatrix, const ModelControls& modelControls, const glm::mat4& projectionMatrix);
 };
+
+void computeRotationVectors(glm::vec3& frontAxis, glm::vec3& leftAxis, glm::vec3& upAxis, const glm::vec3& rotDir);
+
 #endif

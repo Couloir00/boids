@@ -15,13 +15,17 @@ private:
 
 public:
     FreeflyCamera();
+
     void      computeDirectionVectors();
     void      moveLeft(float t);
     void      moveFront(float t);
+    void      moveUp(float t);
+    void      moveDown(float t);
     void      rotateLeft(float degrees);
     void      rotateUp(float degrees);
     glm::mat4 getViewMatrix() const;
+
+    void setPosition(const glm::vec3& position) { m_Position = position; }
 };
 
-void cameraControls(const p6::Key& key, FreeflyCamera& freeCamera);
 #endif

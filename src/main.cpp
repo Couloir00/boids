@@ -4,13 +4,18 @@
 #include "Boid/boid.hpp"
 #include "Camera/FreeflyCamera.hpp"
 #include "Intensity/Intensity.hpp"
+#include "LODModel/LODModel.hpp"
+#include "Lights/LightManager.hpp"
 #include "Model/Model.hpp"
 #include "Model/ModelControls.hpp"
-#include "Sphere/common.hpp"
+#include "Model/ModelLod.hpp"
+#include "SkyboxEnv/SkyboxEnv.hpp"
 #include "Sphere/sphere_vertices.hpp"
+#include "Texture/Texture.hpp"
 #include "doctest/doctest.h"
 #include "glm/ext/vector_float3.hpp"
 #include "glm/fwd.hpp"
+#include "img/src/Image.h"
 #include "imgui.h"
 #include "p6/p6.h"
 
@@ -30,16 +35,18 @@ int main(int argc, char* argv[])
     ctx.maximize_window();
     // vector of numberBoids boids
     static std::vector<Boid>
-              boids;
-    int       numberBoids = 100;
-    float     radius      = 0.05f;
+        boids;
+    int numberBoids = 10;
+    // float     radius      = 0.05f;
     Intensity intensities{0.5f, 0.5f, 0.5f, 0.5f};
     boids.reserve(numberBoids);
     for (int i = 0; i < numberBoids; i++)
     {
-        boids.emplace_back();
+        boids.emplace_back(
+            glm::vec3(p6::random::number(-1.f, 1.f), p6::random::number(-1.f, 1.f), p6::random::number(-1.f, 1.f)),
+            glm::vec3(100000.f), 0.5
+        );
     }
-
     // ImGui context
     ctx.imgui = [&]() {
         ImGui::Begin("Sliders");
@@ -52,7 +59,7 @@ int main(int argc, char* argv[])
         ImGui::SliderFloat("Perception", &(intensities.perceptionIntensity), 0.001f, 10.f);
 
         ImGui::Text("Boids");
-        ImGui::SliderFloat("Radius", &radius, 0.001f, 1.f);
+        // ImGui::SliderFloat("Radius", &radius, 0.001f, 1.f);
         ImGui::End();
     };
 
@@ -61,36 +68,73 @@ int main(int argc, char* argv[])
     // glEnable(GL_CULL_FACE);
 
     // shaders
-    const p6::Shader myShaders = p6::load_shader("Shaders/3D.vs.glsl", "Shaders/ponctualLight.fs.glsl");
-    // light
+    const p6::Shader myShaders = p6::load_shader("Shaders/3D.vs.glsl", "Shaders/Light.fs.glsl");
+    /*// light
     glm::vec3 lightPos       = glm::vec3(0.0f, 1.0f, -3.0f);
     glm::vec3 lightIntensity = glm::vec3(3.0f, 3.0f, 3.0f);
     myShaders.set("uLightPos_vs", lightPos);
-    myShaders.set("uLightIntensity", lightIntensity);
+    myShaders.set("uLightIntensity", lightIntensity);*/
     // camera
     FreeflyCamera camera;
-    // Model init test
-    Model test("Assets/ghost.obj");
+    img::Image    aTex = p6::load_image_buffer("Assets/remi.png");
+    Texture       aTexture{};
+    aTexture.initTexture(static_cast<int>(aTex.width()), static_cast<int>(aTex.height()), aTex.data(), GL_RGBA, GL_UNSIGNED_BYTE);
 
-    test.modelLoad();
-    test.modelInitialize();
+    // Model init test
+    Model    test("Assets/ghost.obj");
+    ModelLOD boidsModel({"Assets/ghost.obj", "Assets/Star-LOD2.obj"});
+    Model    ground("Assets/Ground.obj");
+
+    // light
+    //********************************************************************************************
+    LightManager lightManager;
+    lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f);
+    lightManager.addPointLight(glm::vec3(0.0f, 1.0f, -3.0f), glm::vec3(0.0f, 0.0f, 1.0f), 10.0f);
+    lightManager.addPointLight(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 10.0f);
+    lightManager.addDirectionalLight(glm::vec3(0.0f, 0.0f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), 100.0f);
+
+    const std::vector<Light*>& lights = lightManager.getLights();
+    int                        i      = 0;
+    for (const auto& light : lights)
+    {
+        if (light->getType() == LightType::Ponctual)
+        {
+            const PointLight* pointLight  = static_cast<const PointLight*>(light);
+            glm::vec3         lightPos_ws = pointLight->m_position;
+            myShaders.set("uLightType[" + std::to_string(i) + "]", 0);
+            myShaders.set("uLightPos_ws[" + std::to_string(i) + "]", lightPos_ws);
+        }
+        else if (light->getType() == LightType::Directional)
+        {
+            const DirectionalLight* directionalLight = static_cast<const DirectionalLight*>(light);
+            myShaders.set("uLightType[" + std::to_string(i) + "]", 1);
+            myShaders.set("uLightDir_ws[" + std::to_string(i) + "]", directionalLight->m_direction);
+        }
+        myShaders.set("uLightColor[" + std::to_string(i) + "]", light->m_color);
+        myShaders.set("uLightIntensity[" + std::to_string(i) + "]", light->m_intensity);
+        i++;
+    }
 
     // camera controls checker
-    bool Z = false;
-    bool Q = false;
-    bool S = false;
-    bool D = false;
+    bool Z     = false;
+    bool Q     = false;
+    bool S     = false;
+    bool D     = false;
+    bool SPACE = false;
+    bool CTRL  = false;
 
     // Declare your infinite update loop.
     ctx.update = [&]() {
-        ModelControls controls{glm::vec3(0.f, 0.f, -1.5), glm::vec3(0.01, 0, 2), 1.f};
-        // ctx.background(p6::NamedColor::Blue);
-        // glClearColor(1.000f, 0.662f, 0.970f, 1.000f);
+        ModelControls controls{glm::vec3(0.f, 0.f, -1.5), glm::vec3(-1.f, 1.f, 2.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        ModelControls control{glm::vec3(0.f, -3.f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+
+        glClearColor(1.000f, 0.662f, 0.970f, 1.000f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         myShaders.use();
-        glm::mat4 ProjMatrix = glm::perspective(glm::radians(70.f), ctx.aspect_ratio(), 0.1f, 100.f);
-        glm::mat4 ViewMatrix = camera.getViewMatrix();
+        glm::mat4  ProjMatrix = glm::perspective(glm::radians(70.f), ctx.aspect_ratio(), 0.1f, 100.f);
+        glm::mat4  ViewMatrix = camera.getViewMatrix();
+        const auto cameraPos  = glm::vec3(ViewMatrix[3]);
 
         // camera moving
         if (Z)
@@ -101,24 +145,28 @@ int main(int argc, char* argv[])
             camera.moveFront(-0.1);
         if (D)
             camera.moveLeft(-0.1);
+        if (SPACE)
+            camera.moveUp(0.1);
+        if (CTRL)
+            camera.moveDown(0.1);
 
-        // mouse
-        ctx.circle(
-            p6::Center{ctx.mouse()},
-            p6::Radius{0.2f}
-        );
+        const std::vector<ModelControls> boidControls = BoidsControls(boids, cameraPos);
 
         test.modelDraw(myShaders, ViewMatrix, controls, ProjMatrix);
+        ground.modelDraw(myShaders, ViewMatrix, control, ProjMatrix);
 
         for (auto& b : boids)
         {
-            b.avoidEdges(ctx, radius);
             b.flock(boids, ctx, intensities); // updating the boids here
-            b.draw(ctx, radius);
+        }
+
+        for (auto const& boid : boidControls)
+        {
+            boidsModel.modelLODDraw(myShaders, ViewMatrix, boid, ProjMatrix);
         }
     };
 
-    ctx.key_pressed = [&Z, &Q, &S, &D](const p6::Key& key) {
+    ctx.key_pressed = [&Z, &Q, &S, &D, &SPACE, &CTRL](const p6::Key& key) {
         if (key.physical == GLFW_KEY_W)
         {
             Z = true;
@@ -135,9 +183,17 @@ int main(int argc, char* argv[])
         {
             D = true;
         }
+        if (key.physical == GLFW_KEY_SPACE)
+        {
+            SPACE = true;
+        }
+        if (key.physical == GLFW_KEY_LEFT_CONTROL)
+        {
+            CTRL = true;
+        }
     };
 
-    ctx.key_released = [&Z, &Q, &S, &D](const p6::Key& key) {
+    ctx.key_released = [&Z, &Q, &S, &D, &SPACE, &CTRL](const p6::Key& key) {
         if (key.physical == GLFW_KEY_W)
         {
             Z = false;
@@ -153,6 +209,14 @@ int main(int argc, char* argv[])
         if (key.physical == GLFW_KEY_D)
         {
             D = false;
+        }
+        if (key.physical == GLFW_KEY_SPACE)
+        {
+            SPACE = false;
+        }
+        if (key.physical == GLFW_KEY_LEFT_CONTROL)
+        {
+            CTRL = false;
         }
     };
 

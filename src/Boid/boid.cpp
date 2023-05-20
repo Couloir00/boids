@@ -1,6 +1,7 @@
 #include "Boid/boid.hpp"
 #include <glm/gtc/random.hpp>
 #include <vector>
+#include "Model/ModelControls.hpp"
 #include "glm/fwd.hpp"
 #include "glm/geometric.hpp"
 #include "p6/p6.h"
@@ -11,14 +12,17 @@
 
 using vec = glm::vec3;
 
-Boid::Boid()
+/*Boid::Boid()
     : m_position(vec(p6::random::point(), -10.f)), m_velocity(vec(p6::random::direction(), -10.f)), m_direction(vec(p6::random::direction(), -10.f)){};
 
 Boid::Boid(const Boid& b)
-    : m_position(b.m_position), m_velocity(b.m_velocity), m_direction(b.m_direction){};
+    : m_position(b.m_position), m_velocity(b.m_velocity), m_direction(b.m_direction){};*/
 
-Boid::Boid(vec pos, vec vel, vec direction)
-    : m_position(pos), m_velocity(vel), m_direction(direction){};
+Boid::Boid(vec pos, vec velocity, float radius)
+    : m_position(pos), m_velocity(velocity), m_radius(radius)
+{
+    m_direction = glm::normalize(glm::vec3(p6::random::number(), p6::random::number(), p6::random::number()));
+};
 
 void Boid::draw(p6::Context& ctx, float radius)
 {
@@ -97,7 +101,7 @@ void Boid::flock(const std::vector<Boid>& boids, p6::Context& ctx, const Intensi
     m_direction += cohesion + alignment + separation;
     m_direction = glm::normalize(m_direction);
 
-    m_velocity = vec{0.1f} * m_direction; // voir si normalize ou pas
+    m_velocity = vec{0.2f} * m_direction; // voir si normalize ou pas
     m_position += m_velocity * vec{2.0f} * vec{ctx.delta_time()};
 }
 
@@ -121,7 +125,29 @@ void Boid::avoidEdges(p6::Context& ctx, float radius)
     }
 }
 
+ModelControls Boid::computeControls() const
+{
+    return ModelControls{
+        .position  = m_position,
+        .direction = m_direction,
+        .speed     = m_velocity,
+        .scale     = m_radius,
+    };
+}
+
 bool Boid::closeToEdges(p6::Context& ctx, float /*radius*/) const
 {
     return m_position.x <= -ctx.aspect_ratio() || m_position.x >= ctx.aspect_ratio() || m_position.y <= -1 || m_position.y >= 1;
 };
+
+std::vector<ModelControls> BoidsControls(const std::vector<Boid>& Boids, const glm::vec3& viewMatrixPosition)
+{
+    std::vector<ModelControls> controlsBoids{Boids.size()};
+    for (auto const& boid : Boids)
+    {
+        ModelControls controls = boid.computeControls();
+        controls.aLod          = updateLOD(viewMatrixPosition, controls.position);
+        controlsBoids.emplace_back(controls);
+    }
+    return controlsBoids;
+}

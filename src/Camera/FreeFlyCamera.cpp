@@ -30,6 +30,15 @@ void FreeflyCamera::moveFront(float t)
 {
     m_Position += t * m_FrontVector;
 }
+void FreeflyCamera::moveUp(float t)
+{
+    m_Position += t * glm::vec3(0.f, 1.f, 0.f);
+}
+
+void FreeflyCamera::moveDown(float t)
+{
+    m_Position -= t * glm::vec3(0.f, 1.f, 0.f);
+}
 
 void FreeflyCamera::rotateLeft(float degrees)
 {
@@ -46,26 +55,4 @@ void FreeflyCamera::rotateUp(float degrees)
 glm::mat4 FreeflyCamera::getViewMatrix() const
 {
     return glm::lookAt(m_Position, m_Position + m_FrontVector, m_UpVector);
-}
-
-void cameraControls(const p6::Key& key, FreeflyCamera& camera)
-{
-    // For QWERTY Keyboards
-
-    if (key.physical == GLFW_KEY_A)
-    {
-        camera.moveLeft(1.f);
-    }
-    else if (key.physical == GLFW_KEY_D)
-    {
-        camera.moveLeft(-1.f);
-    }
-    else if (key.physical == GLFW_KEY_W)
-    {
-        camera.moveFront(1.f);
-    }
-    else if (key.physical == GLFW_KEY_S)
-    {
-        camera.moveFront(-1.f);
-    }
 }
