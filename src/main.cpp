@@ -140,7 +140,7 @@ int main(int argc, char* argv[])
         myShaders.set("uUseTexture", false);
         glm::mat4  ProjMatrix = glm::perspective(glm::radians(70.f), ctx.aspect_ratio(), 0.1f, 100.f);
         glm::mat4  ViewMatrix = camera.getViewMatrix();
-        const auto cameraPos  = glm::vec3(ViewMatrix[3]);
+        const auto cameraPos  = camera.getCamPosition();
 
         // camera moving
         if (Z)

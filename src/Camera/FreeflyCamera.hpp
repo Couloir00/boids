@@ -1,6 +1,7 @@
 #ifndef __FREEFLYCAMERA_HPP_
 #define __FREEFLYCAMERA_HPP_
 
+#include "glm/fwd.hpp"
 #include "glm/glm.hpp"
 #include "p6/p6.h"
 
@@ -25,7 +26,10 @@ public:
     void      rotateUp(float degrees);
     glm::mat4 getViewMatrix() const;
 
-    void setPosition(const glm::vec3& position) { m_Position = position; }
+    glm::vec3 getCamPosition() const;
+    glm::vec3 getCamFrontVector() const;
+    glm::vec3 getCamLeftVector() const;
+    glm::vec3 getCamUpVector() const;
 };
 
 #endif
