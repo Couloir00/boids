@@ -30,6 +30,8 @@ public:
     glm::vec3 getCamFrontVector() const;
     glm::vec3 getCamLeftVector() const;
     glm::vec3 getCamUpVector() const;
+
+    inline void setCamPosition(glm::vec3 pos) { m_Position = pos; }
 };
 
 #endif

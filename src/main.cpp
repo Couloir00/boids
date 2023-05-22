@@ -1,5 +1,6 @@
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <cstdlib>
+#include <iostream>
 #include <vector>
 #include "Boid/boid.hpp"
 #include "Camera/FreeflyCamera.hpp"
@@ -87,8 +88,9 @@ int main(int argc, char* argv[])
 
     // Model init test
     Model    test("Assets/ghost.obj");
-    ModelLOD boidsModel({"Assets/ghost.obj", "Assets/Star-LOD2.obj"});
-    Model    ground("Assets/cube3.obj");
+    ModelLOD boidsModel({"Assets/ghost.obj", "Assets/Star2.obj"});
+    Model    ground("Assets/ground.obj");
+    Model    manor("Assets/Grave2.obj");
 
     // light
     //********************************************************************************************
@@ -96,7 +98,7 @@ int main(int argc, char* argv[])
     lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f);
     lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 10.0f);
     lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 10.0f);
-    lightManager.addDirectionalLight(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(1.0f, 0.0f, 0.0f), 100.0f);
+    lightManager.addDirectionalLight(glm::vec3(1.0f, 10.0f, 3.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
 
     // playerLight must be declared after all other lights
     lightManager.addPointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(.0f, 0.0f, 1.0f), 10.0f);
@@ -130,6 +132,15 @@ int main(int argc, char* argv[])
     bool D     = false;
     bool SPACE = false;
     bool CTRL  = false;
+    bool P     = false;
+
+    // character position limits
+    float minX = -29.0f;
+    float maxX = 29.0f;
+    float minZ = -28.5f;
+    float maxZ = 28.5f;
+    float minY = -1.4f;
+    float maxY = 14.f;
 
     // Declare your infinite update loop.
     ctx.update = [&]() {
@@ -162,12 +173,33 @@ int main(int argc, char* argv[])
             camera.moveUp(0.1);
         if (CTRL)
             camera.moveDown(0.1);
+        if (P)
+        {
+            std::cout << "x = " << playerControl.position.x << std::endl;
+            std::cout << "y = " << playerControl.position.y << std::endl;
+            std::cout << "z = " << playerControl.position.z << std::endl;
+        }
+
+        // Vérification des limites de position
+        if (camera.getCamPosition().x < minX)
+            camera.setCamPosition(glm::vec3(minX, camera.getCamPosition().y, camera.getCamPosition().z));
+        if (camera.getCamPosition().x > maxX)
+            camera.setCamPosition(glm::vec3(maxX, camera.getCamPosition().y, camera.getCamPosition().z));
+        if (camera.getCamPosition().z < minZ)
+            camera.setCamPosition(glm::vec3(camera.getCamPosition().x, camera.getCamPosition().y, minZ));
+        if (camera.getCamPosition().z > maxZ)
+            camera.setCamPosition(glm::vec3(camera.getCamPosition().x, camera.getCamPosition().y, maxZ));
+        if (camera.getCamPosition().y < minY)
+            camera.setCamPosition(glm::vec3(camera.getCamPosition().x, minY, camera.getCamPosition().z));
+        if (camera.getCamPosition().y > maxY)
+            camera.setCamPosition(glm::vec3(camera.getCamPosition().x, maxY, camera.getCamPosition().z));
 
         const std::vector<ModelControls> boidControls = BoidsControls(boids, cameraPos);
 
         test.modelDraw(myShaders, ViewMatrix, playerControl, ProjMatrix);
 
         ground.modelDraw(myShaders, ViewMatrix, control, ProjMatrix);
+        manor.modelDraw(myShaders, ViewMatrix, control, ProjMatrix);
 
         for (auto& b : boids)
         {
@@ -196,7 +228,7 @@ int main(int argc, char* argv[])
         glDepthFunc(GL_LESS);
     };
 
-    ctx.key_pressed = [&Z, &Q, &S, &D, &SPACE, &CTRL](const p6::Key& key) {
+    ctx.key_pressed = [&Z, &Q, &S, &D, &SPACE, &CTRL, &P](const p6::Key& key) {
         if (key.physical == GLFW_KEY_W)
         {
             Z = true;
@@ -213,6 +245,10 @@ int main(int argc, char* argv[])
         {
             D = true;
         }
+        if (key.physical == GLFW_KEY_P)
+        {
+            P = true;
+        }
         if (key.physical == GLFW_KEY_SPACE)
         {
             SPACE = true;
@@ -223,7 +259,7 @@ int main(int argc, char* argv[])
         }
     };
 
-    ctx.key_released = [&Z, &Q, &S, &D, &SPACE, &CTRL](const p6::Key& key) {
+    ctx.key_released = [&Z, &Q, &S, &D, &SPACE, &CTRL, &P](const p6::Key& key) {
         if (key.physical == GLFW_KEY_W)
         {
             Z = false;
@@ -239,6 +275,10 @@ int main(int argc, char* argv[])
         if (key.physical == GLFW_KEY_D)
         {
             D = false;
+        }
+        if (key.physical == GLFW_KEY_P)
+        {
+            P = false;
         }
         if (key.physical == GLFW_KEY_SPACE)
         {
