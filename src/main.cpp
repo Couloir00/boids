@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
 
     // Model init test
     Model    test("Assets/ghost.obj");
-    ModelLOD boidsModel({"Assets/ghost.obj", "Assets/Star2.obj"});
+    ModelLOD boidsModel({"Assets/starLow.obj", "Assets/starHigh.obj"});
     Model    ground("Assets/ground.obj");
     Model    manor("Assets/Grave2.obj");
 
