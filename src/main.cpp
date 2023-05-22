@@ -93,10 +93,13 @@ int main(int argc, char* argv[])
     // light
     //********************************************************************************************
     LightManager lightManager;
-    lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f);
-    lightManager.addPointLight(glm::vec3(0.0f, 1.0f, -3.0f), glm::vec3(0.0f, 0.0f, 1.0f), 10.0f);
-    lightManager.addPointLight(glm::vec3(2.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 10.0f);
-    lightManager.addDirectionalLight(glm::vec3(0.0f, 0.0f, 0.5f), glm::vec3(1.0f, 0.0f, 0.0f), 100.0f);
+    lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f);
+    lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 10.0f);
+    lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 10.0f);
+    lightManager.addDirectionalLight(glm::vec3(0.0f, 1.0f, 3.0f), glm::vec3(1.0f, 0.0f, 0.0f), 100.0f);
+
+    // playerLight must be declared after all other lights
+    lightManager.addPointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(.0f, 0.0f, 1.0f), 10.0f);
 
     const std::vector<Light*>& lights = lightManager.getLights();
     int                        i      = 0;
@@ -130,11 +133,15 @@ int main(int argc, char* argv[])
 
     // Declare your infinite update loop.
     ctx.update = [&]() {
-        ModelControls controls{glm::vec3(0.f, 0.f, -1.5), glm::vec3(-1.f, 1.f, 2.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        ModelControls playerControl = playerControls(camera.getCamPosition(), camera.getCamFrontVector());
+
         ModelControls control{glm::vec3(0.f, -3.f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
 
         glClearColor(1.000f, 0.662f, 0.970f, 1.000f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        glm::vec3 playerLight = vec(playerControl.position.x, playerControl.position.y + 1.f, playerControl.position.z);
+        myShaders.set("uLightPos_ws[" + std::to_string(lightManager.nb_lights - 1) + "]", playerLight);
 
         myShaders.use();
         myShaders.set("uUseTexture", false);
@@ -158,7 +165,7 @@ int main(int argc, char* argv[])
 
         const std::vector<ModelControls> boidControls = BoidsControls(boids, cameraPos);
 
-        test.modelDraw(myShaders, ViewMatrix, controls, ProjMatrix);
+        test.modelDraw(myShaders, ViewMatrix, playerControl, ProjMatrix);
 
         ground.modelDraw(myShaders, ViewMatrix, control, ProjMatrix);
 
@@ -245,7 +252,7 @@ int main(int argc, char* argv[])
 
     ctx.mouse_dragged = [&](p6::MouseDrag drag) {
         camera.rotateLeft(drag.delta.x * 25.f);
-        camera.rotateUp(drag.delta.y * 25.f);
+        camera.rotateUp(-drag.delta.y * 25.f);
     };
 
     // Should be done last. It starts the infinite loop.

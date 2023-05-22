@@ -1,6 +1,7 @@
 #ifndef _LIGHTS_HPP__
 #define _LIGHTS_HPP__
 
+#include <iostream>
 #include <vector>
 #include "Sphere/common.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
@@ -27,6 +28,7 @@ protected:
 };
 
 class PointLight : public Light {
+private:
 public:
     glm::vec3 m_position;
 
@@ -49,6 +51,7 @@ private:
     std::vector<Light*> m_lights;
 
 public:
+    int  nb_lights = 0;
     void addPointLight(glm::vec3 position, glm::vec3 color, float intensity);
     void addDirectionalLight(glm::vec3 direction, glm::vec3 color, float intensity);
 

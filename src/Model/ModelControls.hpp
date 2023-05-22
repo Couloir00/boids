@@ -13,4 +13,15 @@ struct ModelControls {
     float     scale;
     LOD       aLod;
 };
+
+inline ModelControls playerControls(const glm::vec3& position, const glm::vec3& direction)
+{
+    return ModelControls{
+        .position  = glm::vec3(position.x, position.y, position.z - .5f),
+        .direction = direction,
+        .speed     = glm::vec3(0.f),
+        .scale     = 0.1f,
+    };
+}
+
 #endif
