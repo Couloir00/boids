@@ -52,9 +52,9 @@ public:
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 
-    void activateTexture(const int& textUnit) const
+    void activateTexture(const int& texUnit) const
     {
-        glActiveTexture(GL_TEXTURE0 + textUnit);
+        glActiveTexture(GL_TEXTURE0 + texUnit);
         glBindTexture(GL_TEXTURE_2D, m_texId);
     }
 

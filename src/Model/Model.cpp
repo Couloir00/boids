@@ -214,7 +214,7 @@ void Model::modelInitialize()
     glVertexAttribPointer(VERTEX_ATTR_NORMALS, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vboUVs.getId());
-    glVertexAttribPointer(VERTEX_ATTR_NORMALS, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), nullptr);
+    glVertexAttribPointer(VERTEX_ATTR_UVS, 2, GL_FLOAT, GL_FALSE, sizeof(glm::vec2), nullptr);
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vboColor.getId());
     glVertexAttribPointer(VERTEX_ATTR_COLOR, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);

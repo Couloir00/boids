@@ -70,11 +70,14 @@ int main(int argc, char* argv[])
 
     // shaders
     const p6::Shader myShaders = p6::load_shader("Shaders/3D.vs.glsl", "Shaders/Light.fs.glsl");
+    myShaders.use();
+    const p6::Shader texShaders = p6::load_shader("Shaders/Tex.vs.glsl", "Shaders/normals.fs.glsl");
+    texShaders.use();
 
     // camera
     FreeflyCamera camera;
     camera.setCamPosition(glm::vec3(0.0f, -2.0f, 25.0f));
-    img::Image aTex = p6::load_image_buffer("Assets/remi.png");
+    img::Image aTex = p6::load_image_buffer("Assets/wood.jpg");
     Texture    aTexture{};
     aTexture.initTexture(static_cast<int>(aTex.width()), static_cast<int>(aTex.height()), aTex.data(), GL_RGBA, GL_UNSIGNED_BYTE);
 
@@ -89,7 +92,7 @@ int main(int argc, char* argv[])
 
     // Model init test
     Model test("Assets/ghostLow.obj");
-    Model ground("Assets/ground.obj");
+    Model ground("Assets/Ground.obj");
     Model manor("Assets/SpookyHouseHigh.obj");
     Model cave("Assets/caveLow.obj");
     Model tree("Assets/BurtonTreeLow.obj");
@@ -100,10 +103,10 @@ int main(int argc, char* argv[])
     // light
     //********************************************************************************************
     LightManager lightManager;
-    // lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 1.0f);
+    lightManager.addPointLight(glm::vec3(-1.0f, 5.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), 100.0f);
     // lightManager.addPointLight(glm::vec3(3.5f, -.2f, -0.4f), glm::vec3(0.0f, 0.5f, 1.0f), 5.0f);
     // lightManager.addPointLight(glm::vec3(-5.0f, 0.0f, -8.0f), glm::vec3(0.0f, 1.0f, .7f), 2.0f);
-    lightManager.addDirectionalLight(glm::vec3(-2.0f, 30.0f, 7.0f), glm::vec3(.5f, .5f, .5f), 2.0f);
+    // lightManager.addDirectionalLight(glm::vec3(-2.0f, 30.0f, 7.0f), glm::vec3(.5f, .5f, .5f), 10.0f);
 
     // playerLight must be declared after all other lights
     lightManager.addPointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(.0f, 0.0f, 1.0f), 10.0f);
@@ -159,13 +162,13 @@ int main(int argc, char* argv[])
         ModelControls fenceControl{glm::vec3(0.f, -5.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
         // ModelControls crossGraveControl{glm::vec3(8.f, -2.5f, 9.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_HIGH};
 
-        glClearColor(1.000f, 0.662f, 0.970f, 1.000f);
+        // glClearColor(1.000f, 0.662f, 0.970f, 1.000f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        myShaders.use();
         glm::vec3 playerLight = vec(playerControl.position.x, playerControl.position.y + 1.f, playerControl.position.z);
         myShaders.set("uLightPos_ws[" + std::to_string(lightManager.nb_lights - 1) + "]", playerLight);
 
-        myShaders.use();
         myShaders.set("uUseTexture", false);
         glm::mat4  ProjMatrix = glm::perspective(glm::radians(70.f), ctx.aspect_ratio(), 0.1f, 100.f);
         glm::mat4  ViewMatrix = camera.getViewMatrix();
@@ -216,9 +219,17 @@ int main(int argc, char* argv[])
         // drawcalls
         test.modelDraw(myShaders, ViewMatrix, playerControl, ProjMatrix);
         ground.modelDraw(myShaders, ViewMatrix, groundControl, ProjMatrix);
+        myShaders.set("uUseTexture", true);
+        myShaders.set("uTexture", 1);
+        aTexture.activateTexture(1);
         manor.modelDraw(myShaders, ViewMatrix, manorControl, ProjMatrix);
+        myShaders.set("uUseTexture", false);
         cave.modelDraw(myShaders, ViewMatrix, caveControl, ProjMatrix);
+        myShaders.set("uUseTexture", true);
+        myShaders.set("uTexture", 1);
+        aTexture.activateTexture(1);
         tree.modelDraw(myShaders, ViewMatrix, treeControl, ProjMatrix);
+        myShaders.set("uUseTexture", false);
         fence.modelDraw(myShaders, ViewMatrix, fenceControl, ProjMatrix);
 
         // crossGraveModel.modelLODDraw(myShaders, ViewMatrix, crossGraveControl, ProjMatrix);
@@ -232,9 +243,6 @@ int main(int argc, char* argv[])
         {
             boidsModel.modelLODDraw(myShaders, ViewMatrix, boidControl, ProjMatrix);
         }
-        myShaders.set("uUseTexture", true);
-        myShaders.set("uTexture", 1);
-        aTexture.activateTexture(1);
 
         // skybox drawcall
         glDepthFunc(GL_LEQUAL);
