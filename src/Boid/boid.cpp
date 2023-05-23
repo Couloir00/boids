@@ -132,6 +132,7 @@ ModelControls Boid::computeControls() const
         .direction = m_direction,
         .speed     = m_velocity,
         .scale     = m_radius,
+        .aLod      = LOD_LOW,
     };
 }
 

@@ -73,8 +73,9 @@ int main(int argc, char* argv[])
 
     // camera
     FreeflyCamera camera;
-    img::Image    aTex = p6::load_image_buffer("Assets/remi.png");
-    Texture       aTexture{};
+    camera.setCamPosition(glm::vec3(0.0f, -2.0f, 25.0f));
+    img::Image aTex = p6::load_image_buffer("Assets/remi.png");
+    Texture    aTexture{};
     aTexture.initTexture(static_cast<int>(aTex.width()), static_cast<int>(aTex.height()), aTex.data(), GL_RGBA, GL_UNSIGNED_BYTE);
 
     Texture                 cubemapTex;
@@ -87,18 +88,22 @@ int main(int argc, char* argv[])
     skyboxShader.set("skybox", 0);
 
     // Model init test
-    Model    test("Assets/ghost.obj");
+    Model test("Assets/ghostLow.obj");
+    Model ground("Assets/ground.obj");
+    Model manor("Assets/SpookyHouseHigh.obj");
+    Model cave("Assets/caveLow.obj");
+    Model tree("Assets/BurtonTreeLow.obj");
+    Model fence("Assets/Fence.obj");
+
     ModelLOD boidsModel({"Assets/starLow.obj", "Assets/starHigh.obj"});
-    Model    ground("Assets/ground.obj");
-    Model    manor("Assets/Grave2.obj");
 
     // light
     //********************************************************************************************
     LightManager lightManager;
-    lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 10.0f);
-    lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 10.0f);
-    lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f), 10.0f);
-    lightManager.addDirectionalLight(glm::vec3(1.0f, 10.0f, 3.0f), glm::vec3(1.0f, 1.0f, 1.0f), 1.0f);
+    // lightManager.addPointLight(glm::vec3(0.0f, 1.0f, 0.0f), glm::vec3(1.0f, 0.0f, 0.0f), 1.0f);
+    // lightManager.addPointLight(glm::vec3(3.5f, -.2f, -0.4f), glm::vec3(0.0f, 0.5f, 1.0f), 5.0f);
+    // lightManager.addPointLight(glm::vec3(-5.0f, 0.0f, -8.0f), glm::vec3(0.0f, 1.0f, .7f), 2.0f);
+    lightManager.addDirectionalLight(glm::vec3(-2.0f, 30.0f, 7.0f), glm::vec3(.5f, .5f, .5f), 2.0f);
 
     // playerLight must be declared after all other lights
     lightManager.addPointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(.0f, 0.0f, 1.0f), 10.0f);
@@ -135,18 +140,24 @@ int main(int argc, char* argv[])
     bool P     = false;
 
     // character position limits
-    float minX = -29.0f;
-    float maxX = 29.0f;
-    float minZ = -28.5f;
-    float maxZ = 28.5f;
-    float minY = -1.4f;
-    float maxY = 14.f;
+    float minX  = -29.0f;
+    float maxX  = 29.0f;
+    float minZ  = -28.5f;
+    float maxZ  = 30.5f;
+    float minY  = -2.2f;
+    float minY2 = -3.2f;
+    float maxY  = 14.f;
 
     // Declare your infinite update loop.
     ctx.update = [&]() {
         ModelControls playerControl = playerControls(camera.getCamPosition(), camera.getCamFrontVector());
 
-        ModelControls control{glm::vec3(0.f, -3.f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        ModelControls groundControl{glm::vec3(0.f, -3.f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        ModelControls manorControl{glm::vec3(2.f, -2.65f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        ModelControls caveControl{glm::vec3(-5.f, -2.5f, -8.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        ModelControls treeControl{glm::vec3(6.f, -2.5f, 10.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        ModelControls fenceControl{glm::vec3(0.f, -5.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        // ModelControls crossGraveControl{glm::vec3(8.f, -2.5f, 9.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_HIGH};
 
         glClearColor(1.000f, 0.662f, 0.970f, 1.000f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -180,6 +191,7 @@ int main(int argc, char* argv[])
             std::cout << "z = " << playerControl.position.z << std::endl;
         }
 
+        //*****************************************************************************************
         // Vérification des limites de position
         if (camera.getCamPosition().x < minX)
             camera.setCamPosition(glm::vec3(minX, camera.getCamPosition().y, camera.getCamPosition().z));
@@ -189,26 +201,36 @@ int main(int argc, char* argv[])
             camera.setCamPosition(glm::vec3(camera.getCamPosition().x, camera.getCamPosition().y, minZ));
         if (camera.getCamPosition().z > maxZ)
             camera.setCamPosition(glm::vec3(camera.getCamPosition().x, camera.getCamPosition().y, maxZ));
+
         if (camera.getCamPosition().y < minY)
+
             camera.setCamPosition(glm::vec3(camera.getCamPosition().x, minY, camera.getCamPosition().z));
+
         if (camera.getCamPosition().y > maxY)
             camera.setCamPosition(glm::vec3(camera.getCamPosition().x, maxY, camera.getCamPosition().z));
 
+        //*****************************************************************************************
+
         const std::vector<ModelControls> boidControls = BoidsControls(boids, cameraPos);
 
+        // drawcalls
         test.modelDraw(myShaders, ViewMatrix, playerControl, ProjMatrix);
+        ground.modelDraw(myShaders, ViewMatrix, groundControl, ProjMatrix);
+        manor.modelDraw(myShaders, ViewMatrix, manorControl, ProjMatrix);
+        cave.modelDraw(myShaders, ViewMatrix, caveControl, ProjMatrix);
+        tree.modelDraw(myShaders, ViewMatrix, treeControl, ProjMatrix);
+        fence.modelDraw(myShaders, ViewMatrix, fenceControl, ProjMatrix);
 
-        ground.modelDraw(myShaders, ViewMatrix, control, ProjMatrix);
-        manor.modelDraw(myShaders, ViewMatrix, control, ProjMatrix);
+        // crossGraveModel.modelLODDraw(myShaders, ViewMatrix, crossGraveControl, ProjMatrix);
 
         for (auto& b : boids)
         {
             b.flock(boids, ctx, intensities); // updating the boids here
         }
 
-        for (auto const& boid : boidControls)
+        for (auto const& boidControl : boidControls)
         {
-            boidsModel.modelLODDraw(myShaders, ViewMatrix, boid, ProjMatrix);
+            boidsModel.modelLODDraw(myShaders, ViewMatrix, boidControl, ProjMatrix);
         }
         myShaders.set("uUseTexture", true);
         myShaders.set("uTexture", 1);

@@ -21,6 +21,7 @@ inline ModelControls playerControls(const glm::vec3& position, const glm::vec3& 
         .direction = direction,
         .speed     = glm::vec3(0.f),
         .scale     = 0.1f,
+        .aLod      = LOD_LOW,
     };
 }
 
