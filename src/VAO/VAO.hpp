@@ -1,5 +1,6 @@
 #ifndef __VAO_HPP_
 #define __VAO_HPP_
+#include <utility>
 #include "p6/p6.h"
 
 class VAO {
