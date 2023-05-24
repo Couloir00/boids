@@ -152,13 +152,12 @@ int main(int argc, char* argv[])
     bool P     = false;
 
     // character position limits
-    float minX  = -29.0f;
-    float maxX  = 29.0f;
-    float minZ  = -28.5f;
-    float maxZ  = 30.5f;
-    float minY  = -2.2f;
-    float minY2 = -3.2f;
-    float maxY  = 14.f;
+    float minX = -29.0f;
+    float maxX = 29.0f;
+    float minZ = -28.5f;
+    float maxZ = 30.5f;
+    float minY = -2.2f;
+    float maxY = 14.f;
 
     // Declare your infinite update loop.
     ctx.update = [&]() {

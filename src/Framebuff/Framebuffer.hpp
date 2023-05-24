@@ -6,6 +6,7 @@
 #define __FRAMEBUFFER_HPP_
 
 #include <array>
+#include <utility>
 #include "Texture/Texture.hpp"
 #include "p6/p6.h"
 
@@ -48,9 +49,8 @@ public:
 
     // Moving constructor
     FrameBuffer(FrameBuffer&& aBuff) noexcept
-        : m_bufferId{aBuff.m_bufferId}
+        : m_bufferId{std::exchange(aBuff.m_bufferId, 0)}
     {
-        aBuff.m_bufferId = 0;
     }
 
     // Move assignment operator (https://en.cppreference.com/w/cpp/language/move_assignment)
@@ -59,11 +59,8 @@ public:
         if (this != &aBuff)
         {
             // Delete previous framebuff
-            glDeleteBuffers(1, &m_bufferId);
-            // Copy the object
-            m_bufferId = aBuff.m_bufferId;
-            // prevent deleting the id by mistake
-            aBuff.m_bufferId = 0;
+            glDeleteFramebuffers(1, &m_bufferId);
+            std::exchange(aBuff.m_bufferId, 0);
         }
         return *this;
     }

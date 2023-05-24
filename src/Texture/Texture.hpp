@@ -1,5 +1,6 @@
 #ifndef __TEXTURE_HPP_
 #define __TEXTURE_HPP_
+#include <utility>
 #include "p6/p6.h"
 
 class Texture {
@@ -18,9 +19,8 @@ public:
 
     // Moving constructor
     Texture(Texture&& aTex) noexcept
-        : m_texId{aTex.m_texId}
+        : m_texId{std::exchange(aTex.m_texId, 0)}
     {
-        aTex.m_texId = 0;
     }
 
     // Move assignment operator (https://en.cppreference.com/w/cpp/language/move_assignment)
@@ -28,12 +28,9 @@ public:
     {
         if (this != &aTex)
         {
-            // Delete previous vbo
-            glDeleteBuffers(1, &m_texId);
-            // Copy the object
-            m_texId = aTex.m_texId;
-            // prevent deleting the id by mistake
-            aTex.m_texId = 0;
+            // Delete previous texture
+            glDeleteTextures(1, &m_texId);
+            m_texId = std::exchange(aTex.m_texId, 0);
         }
         return *this;
     }

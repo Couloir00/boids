@@ -1,5 +1,6 @@
 #ifndef __VBO_HPP_
 #define __VBO_HPP_
+#include <utility>
 #include "p6/p6.h"
 
 class VBO {
@@ -21,9 +22,8 @@ public:
     // Moving constructor
     VBO(VBO&& aVbo)
     noexcept
-        : m_vboId{aVbo.m_vboId}
+        : m_vboId{std::exchange(aVbo.m_vboId, 0)}
     {
-        aVbo.m_vboId = 0;
     }
 
     // Move assignment operator (https://en.cppreference.com/w/cpp/language/move_assignment)
@@ -33,10 +33,7 @@ public:
         {
             // Delete previous vbo
             glDeleteBuffers(1, &m_vboId);
-            // Copy the object
-            m_vboId = aVbo.m_vboId;
-            // prevent deleting the id by mistake
-            aVbo.m_vboId = 0;
+            std::exchange(aVbo.m_vboId, 0);
         }
         return *this;
     }

@@ -11,7 +11,7 @@ public:
     VAO() { glGenVertexArrays(1, &m_vaoId); }
 
     // vao destructor
-    ~VAO() { glDeleteBuffers(1, &m_vaoId); }
+    ~VAO() { glDeleteVertexArrays(1, &m_vaoId); }
 
     // copy construct (copy not allowed to prevent dumb moves)
     VAO(const VAO&) = delete;
@@ -21,9 +21,8 @@ public:
     // Moving constructor
     VAO(VAO&& aVao)
     noexcept
-        : m_vaoId{aVao.m_vaoId}
+        : m_vaoId{std::exchange(aVao.m_vaoId, 0)}
     {
-        aVao.m_vaoId = 0;
     }
 
     // Move assignment operator (https://en.cppreference.com/w/cpp/language/move_assignment)
@@ -32,11 +31,8 @@ public:
         if (this != &aVao)
         {
             // Delete previous vao
-            glDeleteBuffers(1, &m_vaoId);
-            // Copy the object
-            m_vaoId = aVao.m_vaoId;
-            // prevent deleting the id by mistake
-            aVao.m_vaoId = 0;
+            glDeleteVertexArrays(1, &m_vaoId);
+            std::exchange(aVao.m_vaoId, 0);
         }
         return *this;
     }
