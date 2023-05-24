@@ -12,12 +12,14 @@ out vec3 vViewNormal;
 out vec3 vWorldNormal;
 out vec2 vTexCoords;
 out vec3 vColor;
+out vec4 vFragPosLightSpace;
 
 //transformations
 uniform mat4 uMVPMatrix;
 uniform mat4 uMVMatrix;
 uniform mat4 uNormalMatrix;
 uniform mat4 model;
+uniform mat4 LightSpaceMatrix;
 
 void main() {
     //passage en coordonnées homogènes
@@ -31,6 +33,7 @@ void main() {
     vViewNormal = vec3(uNormalMatrix * vertexNormal);
     vTexCoords = aVertexTexCoords;
     vColor = aVertexColor;
+    vFragPosLightSpace = LightSpaceMatrix * model *vertexPosition;
     
     //Calcul de la position projetée
     gl_Position = uMVPMatrix * vertexPosition;

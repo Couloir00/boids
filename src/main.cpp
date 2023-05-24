@@ -1,15 +1,19 @@
+#include "glm/ext/matrix_float4x4.hpp"
+#include "glm/ext/matrix_transform.hpp"
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <cstdlib>
 #include <iostream>
 #include <vector>
 #include "Boid/boid.hpp"
 #include "Camera/FreeflyCamera.hpp"
+#include "Framebuff/Framebuffer.hpp"
 #include "Intensity/Intensity.hpp"
 #include "LODModel/LODModel.hpp"
 #include "Lights/LightManager.hpp"
 #include "Model/Model.hpp"
 #include "Model/ModelControls.hpp"
 #include "Model/ModelLod.hpp"
+#include "Shadows/Shadow.hpp"
 #include "SkyboxEnv/SkyboxEnv.hpp"
 #include "Sphere/sphere_vertices.hpp"
 #include "Texture/Texture.hpp"
@@ -36,6 +40,7 @@ int main(int argc, char* argv[])
     ctx.maximize_window();
     // vector of numberBoids boids
     static std::vector<Boid>
+
         boids;
     int numberBoids = 10;
     // float     radius      = 0.05f;
@@ -81,6 +86,9 @@ int main(int argc, char* argv[])
     Texture    aTexture{};
     aTexture.initTexture(static_cast<int>(aTex.width()), static_cast<int>(aTex.height()), aTex.data(), GL_RGBA, GL_UNSIGNED_BYTE);
 
+    // shadow test
+    Shadow shadows({"Shaders/mapping.vs.glsl", "Shaders/mapping.fs.glsl"}, ctx.main_canvas_width(), ctx.main_canvas_height());
+
     Texture                 cubemapTex;
     std::vector<img::Image> Images;
     p6::Shader              skyboxShader = p6::load_shader("Shaders/SkyboxEnv.vs.glsl", "Shaders/SkyboxEnv.fs.glsl");
@@ -121,6 +129,7 @@ int main(int argc, char* argv[])
             glm::vec3         lightPos_ws = pointLight->m_position;
             myShaders.set("uLightType[" + std::to_string(i) + "]", 0);
             myShaders.set("uLightPos_ws[" + std::to_string(i) + "]", lightPos_ws);
+            // std::cout << pointLight[0].getPosition().y << "\n";
         }
         else if (light->getType() == LightType::Directional)
         {
@@ -132,7 +141,7 @@ int main(int argc, char* argv[])
         myShaders.set("uLightIntensity[" + std::to_string(i) + "]", light->m_intensity);
         i++;
     }
-
+    glm::vec3 lightPos(-1.0f, 5.0f, 0.0f); // pos of first pointlight in the manager
     // camera controls checker
     bool Z     = false;
     bool Q     = false;
@@ -162,17 +171,21 @@ int main(int argc, char* argv[])
         ModelControls fenceControl{glm::vec3(0.f, -5.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
         // ModelControls crossGraveControl{glm::vec3(8.f, -2.5f, 9.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_HIGH};
 
-        // glClearColor(1.000f, 0.662f, 0.970f, 1.000f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        myShaders.use();
         glm::vec3 playerLight = vec(playerControl.position.x, playerControl.position.y + 1.f, playerControl.position.z);
-        myShaders.set("uLightPos_ws[" + std::to_string(lightManager.nb_lights - 1) + "]", playerLight);
 
-        myShaders.set("uUseTexture", false);
         glm::mat4  ProjMatrix = glm::perspective(glm::radians(70.f), ctx.aspect_ratio(), 0.1f, 100.f);
         glm::mat4  ViewMatrix = camera.getViewMatrix();
         const auto cameraPos  = camera.getCamPosition();
+
+        const std::vector<ModelControls> boidControls = BoidsControls(boids, cameraPos);
+
+        // shadow
+
+        glm::mat4       lightView        = glm::lookAt(lightPos, glm::vec3(0.f), glm::vec3(0.f, 1.f, 0.f));
+        const glm::mat4 lightProjection  = glm::perspective(glm::radians(70.f), ctx.aspect_ratio(), 0.1f, 100.f);
+        glm::mat4       lightSpaceMatrix = lightProjection * lightView;
+        shadows.shadowRendering(boidsModel, ProjMatrix, lightSpaceMatrix, boidControls, myShaders, ctx);
+        // shadows.shadowRendering(ma, ProjMatrix, lightSpaceMatrix, boidControls, myShaders, ctx);
 
         // camera moving
         if (Z)
@@ -214,7 +227,11 @@ int main(int argc, char* argv[])
 
         //*****************************************************************************************
 
-        const std::vector<ModelControls> boidControls = BoidsControls(boids, cameraPos);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        myShaders.use();
+        myShaders.set("LightSpaceMatrix", lightSpaceMatrix);
+        myShaders.set("uLightPos_ws[" + std::to_string(lightManager.nb_lights - 1) + "]", playerLight);
+        myShaders.set("uUseTexture", false);
 
         // drawcalls
         test.modelDraw(myShaders, ViewMatrix, playerControl, ProjMatrix);
@@ -223,12 +240,15 @@ int main(int argc, char* argv[])
         myShaders.set("uTexture", 1);
         aTexture.activateTexture(1);
         manor.modelDraw(myShaders, ViewMatrix, manorControl, ProjMatrix);
+
         myShaders.set("uUseTexture", false);
         cave.modelDraw(myShaders, ViewMatrix, caveControl, ProjMatrix);
+
         myShaders.set("uUseTexture", true);
         myShaders.set("uTexture", 1);
         aTexture.activateTexture(1);
         tree.modelDraw(myShaders, ViewMatrix, treeControl, ProjMatrix);
+
         myShaders.set("uUseTexture", false);
         fence.modelDraw(myShaders, ViewMatrix, fenceControl, ProjMatrix);
 

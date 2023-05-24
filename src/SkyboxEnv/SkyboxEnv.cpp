@@ -46,7 +46,7 @@ const std::array skyboxVertices =
         -1.0f, -1.0f, 1.0f,
         1.0f, -1.0f, 1.0f};
 
-void generateSkybox(Texture& cubemapTex, std::vector<img::Image>& Images, const VAO& skybVAO, const VBO& skyVBO)
+void generateSkybox(Texture& cubemapTex, std::vector<img::Image>& faces, const VAO& skybVAO, const VBO& skyVBO)
 {
     std::vector<std::string> cubemapFaces = {
         "Textures/SkyboxFaces/right.png",
@@ -57,10 +57,10 @@ void generateSkybox(Texture& cubemapTex, std::vector<img::Image>& Images, const 
         "Textures/SkyboxFaces/back.png"};
     for (auto& cubemapFace : cubemapFaces)
     {
-        Images.emplace_back(p6::load_image_buffer("Assets/" + cubemapFace));
+        faces.emplace_back(p6::load_image_buffer("Assets/" + cubemapFace));
     }
 
-    cubemapTex.cubemapTexture(Images);
+    cubemapTex.cubemapTexture(faces);
     glBindVertexArray(skybVAO.getId());
     glBindBuffer(GL_ARRAY_BUFFER, skyVBO.getId());
     glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
