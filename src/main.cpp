@@ -103,7 +103,8 @@ int main(int argc, char* argv[])
     Model ground("Assets/Ground.obj");
     Model manor("Assets/SpookyHouseHigh.obj");
     Model cave("Assets/caveLow.obj");
-    Model tree("Assets/BurtonTreeLow.obj");
+    Model tree("Assets/BigTreeHigh.obj");
+    Model tree2("Assets/SmallTreeHigh.obj");
     Model fence("Assets/Fence.obj");
 
     ModelLOD boidsModel({"Assets/starLow.obj", "Assets/starHigh.obj"});
@@ -112,9 +113,9 @@ int main(int argc, char* argv[])
     //********************************************************************************************
     LightManager lightManager;
     lightManager.addPointLight(glm::vec3(-1.0f, 5.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), 100.0f);
-    // lightManager.addPointLight(glm::vec3(3.5f, -.2f, -0.4f), glm::vec3(0.0f, 0.5f, 1.0f), 5.0f);
-    // lightManager.addPointLight(glm::vec3(-5.0f, 0.0f, -8.0f), glm::vec3(0.0f, 1.0f, .7f), 2.0f);
-    // lightManager.addDirectionalLight(glm::vec3(-2.0f, 30.0f, 7.0f), glm::vec3(.5f, .5f, .5f), 10.0f);
+    lightManager.addPointLight(glm::vec3(3.5f, -.2f, -0.4f), glm::vec3(0.0f, 0.5f, 1.0f), 5.0f);
+    lightManager.addPointLight(glm::vec3(-5.0f, 0.0f, -8.0f), glm::vec3(0.0f, 1.0f, .7f), 2.0f);
+    lightManager.addDirectionalLight(glm::vec3(-2.0f, 30.0f, 7.0f), glm::vec3(.2f, .5f, .5f), 2.0f);
 
     // playerLight must be declared after all other lights
     lightManager.addPointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(.0f, 0.0f, 1.0f), 10.0f);
@@ -164,9 +165,10 @@ int main(int argc, char* argv[])
         ModelControls playerControl = playerControls(camera.getCamPosition(), camera.getCamFrontVector());
 
         ModelControls groundControl{glm::vec3(0.f, -3.f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
-        ModelControls manorControl{glm::vec3(2.f, -2.65f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        ModelControls manorControl{glm::vec3(2.f, -2.65f, 4.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
         ModelControls caveControl{glm::vec3(-5.f, -2.5f, -8.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
-        ModelControls treeControl{glm::vec3(6.f, -2.5f, 10.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        ModelControls treeControl{glm::vec3(0.f, -5.f, -.5f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+        ModelControls tree2Control{glm::vec3(-3.f, -5.5f, 15.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
         ModelControls fenceControl{glm::vec3(0.f, -5.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
         // ModelControls crossGraveControl{glm::vec3(8.f, -2.5f, 9.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_HIGH};
 
@@ -247,6 +249,7 @@ int main(int argc, char* argv[])
         myShaders.set("uTexture", 1);
         aTexture.activateTexture(1);
         tree.modelDraw(myShaders, ViewMatrix, treeControl, ProjMatrix);
+        tree2.modelDraw(myShaders, ViewMatrix, tree2Control, ProjMatrix);
 
         myShaders.set("uUseTexture", false);
         fence.modelDraw(myShaders, ViewMatrix, fenceControl, ProjMatrix);
