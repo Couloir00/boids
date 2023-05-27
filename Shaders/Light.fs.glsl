@@ -35,6 +35,18 @@ out vec4 fFragColor;
 uniform bool uUseTexture;
 uniform sampler2D uTexture;
 
+vec3 applyFog(in vec3 rgb){
+    float a = 0.02;
+    float b= 0.05;
+    float distance = distance(vViewPosition, vWorldPosition);
+    vec3 rayOri = vViewPosition;
+    vec3 rayDir = normalize(- vViewPosition);
+    float fogAmount = (a / b) * exp(-rayOri.y * b) * (1.0 - exp(-distance * rayDir.y * b)) / rayDir.y;
+
+    vec3 fogColor = vec3(0.5, 0.6, 0.7);
+    return mix(rgb, fogColor, fogAmount);
+}
+
 vec3 ponctualBlinnPhong(int lightIndex){
 
     vec3 N = normalize(vViewNormal);
@@ -88,7 +100,7 @@ float calculateShadow(vec4 FragPosLightSpace){
     shadow = 0.0;
     vec3 normal = normalize(vViewNormal);
     vec3 lightDir = normalize(uLightPos_ws[0]-vViewPosition);
-    bias = max(0.05*(1.0-dot(normal,lightDir)),0.005);
+    bias = max(0.05*(1.0-dot(normal,lightDir)),0.02);
     closestDepth = texture(shadowMap,projCoords.xy).r;
     currentDepth = projCoords.z;
     shadow += currentDepth - bias > closestDepth ? 1.0 : 0.0;
@@ -122,7 +134,7 @@ void main() {
     
     float shadow = calculateShadow(vFragPosLightSpace);
     vec4 lightScene = ((1.0-shadow)*(ambient + vec4(sumLights,1.0)))*color;
-
+    vec3 foggedColor = applyFog(lightScene.rgb);
     //fFragColor = vec4(sumLights,1.)*color;
-    fFragColor = lightScene;
+    fFragColor = vec4(foggedColor, lightScene.a);
 }
