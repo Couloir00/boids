@@ -24,16 +24,35 @@
 #include "imgui.h"
 #include "p6/p6.h"
 
+void runTests(int argc, char* argv[])
+{
+    if (doctest::Context{}.run() != 0)
+        exit(EXIT_FAILURE);
+
+    const bool no_gpu_available = argc >= 2 && strcmp(argv[1], "-nogpu") == 0;
+    if (no_gpu_available)
+        exit(EXIT_SUCCESS);
+}
+
+void handleCameraControl(FreeflyCamera& camera, bool Z, bool Q, bool S, bool D, bool SPACE, bool CTRL)
+{
+    if (Z)
+        camera.moveFront(0.1f);
+    if (Q)
+        camera.moveLeft(0.1f);
+    if (S)
+        camera.moveFront(-0.1f);
+    if (D)
+        camera.moveLeft(-0.1f);
+    if (SPACE)
+        camera.moveUp(0.1f);
+    if (CTRL)
+        camera.moveDown(0.1f);
+}
+
 int main(int argc, char* argv[])
 {
-    { // Run the tests
-        if (doctest::Context{}.run() != 0)
-            return EXIT_FAILURE;
-        // The CI does not have a GPU so it cannot run the rest of the code.
-        const bool no_gpu_available = argc >= 2 && strcmp(argv[1], "-nogpu") == 0; // NOLINT(cppcoreguidelines-pro-bounds-pointer-arithmetic)
-        if (no_gpu_available)
-            return EXIT_SUCCESS;
-    }
+    runTests(argc, argv);
 
     // Actual app
     auto ctx = p6::Context{{.title = "giveItATry"}};
@@ -188,19 +207,8 @@ int main(int argc, char* argv[])
         shadows.shadowRendering(boidsModel, ProjMatrix, lightSpaceMatrix, boidControls, myShaders, ctx);
         // shadows.shadowRendering(ma, ProjMatrix, lightSpaceMatrix, boidControls, myShaders, ctx);
 
+        handleCameraControl(camera, Z, Q, S, D, SPACE, CTRL);
         // camera moving
-        if (Z)
-            camera.moveFront(0.1f);
-        if (Q)
-            camera.moveLeft(0.1);
-        if (S)
-            camera.moveFront(-0.1);
-        if (D)
-            camera.moveLeft(-0.1);
-        if (SPACE)
-            camera.moveUp(0.1);
-        if (CTRL)
-            camera.moveDown(0.1);
         if (P)
         {
             std::cout << "x = " << playerControl.position.x << std::endl;
