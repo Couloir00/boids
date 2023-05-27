@@ -104,6 +104,7 @@ void main() {
     vec4 color = vec4(vColor, 1.0);
     vec4 ambient = vec4((0.3 * uLightColor[0]),1.0);
     vec3 sumLights = vec3(0.0);
+    //float shadow = 0.0;
 
     if (uUseTexture){
         color *= texture(uTexture, vTexCoords);
@@ -116,8 +117,9 @@ void main() {
         else if(uLightType[i] == 1){
             sumLights += blinnPhong(i);
         }
+        //shadow += calculateShadow(vFragPosLightSpace,i);
     }
-
+    
     float shadow = calculateShadow(vFragPosLightSpace);
     vec4 lightScene = ((1.0-shadow)*(ambient + vec4(sumLights,1.0)))*color;
 

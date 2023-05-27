@@ -13,7 +13,7 @@ Shadow::Shadow(std::array<std::string, 2> shadowShaderPaths, const int& shadowWi
 {
 }
 
-void Shadow::shadowRendering(ModelLOD& shadowModeler, const glm::mat4& projectionMatrix, const glm::mat4 lightSpaceMatrix, const std::vector<ModelControls>& shadowControls, const p6::Shader& shader, const p6::Context& ctx)
+void Shadow::shadowRenderingModelLOD(ModelLOD& shadowLODModeler, const glm::mat4& projectionMatrix, const glm::mat4 lightSpaceMatrix, const std::vector<ModelControls>& shadowControls, const p6::Shader& shader, const p6::Context& ctx)
 {
     m_shadowShader.use();
     m_shadowShader.set("LightSpaceMatrix", lightSpaceMatrix);
@@ -26,8 +26,24 @@ void Shadow::shadowRendering(ModelLOD& shadowModeler, const glm::mat4& projectio
     shader.set("shadowMap", 0);
     for (const auto& shadowControl : shadowControls)
     {
-        shadowModeler.modelLODDraw(m_shadowShader, lightSpaceMatrix, shadowControl, projectionMatrix);
+        shadowLODModeler.modelLODDraw(m_shadowShader, lightSpaceMatrix, shadowControl, projectionMatrix);
     }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    glViewport(0, 0, ctx.main_canvas_width(), ctx.main_canvas_height()); // reset viewport
+}
+
+void Shadow::shadowRenderingModel(Model& shadowModeler, const glm::mat4& projectionMatrix, const glm::mat4 lightSpaceMatrix, const ModelControls& shadowControls, const p6::Shader& shader, const p6::Context& ctx)
+{
+    m_shadowShader.use();
+    m_shadowShader.set("LightSpaceMatrix", lightSpaceMatrix);
+
+    glViewport(0, 0, m_shadowBuffer.getShadowWidth(), m_shadowBuffer.getShadowHeight());
+    glBindFramebuffer(GL_FRAMEBUFFER, m_shadowBuffer.getId());
+    glClear(GL_DEPTH_BUFFER_BIT);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_shadowBuffer.getTexId());
+    shader.set("shadowMap", 0);
+    shadowModeler.modelDraw(m_shadowShader, lightSpaceMatrix, shadowControls, projectionMatrix);
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, ctx.main_canvas_width(), ctx.main_canvas_height()); // reset viewport
 }

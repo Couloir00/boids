@@ -76,3 +76,115 @@ glm::vec3 FreeflyCamera::getCamUpVector() const
 {
     return m_UpVector;
 }
+
+void FreeflyCamera::keyboardEvents(FreeflyCamera& camera, ModelControls& playerControl) const
+{
+    if (Z)
+        camera.moveFront(0.1f);
+    if (Q)
+        camera.moveLeft(0.1f);
+    if (S)
+        camera.moveFront(-0.1f);
+    if (D)
+        camera.moveLeft(-0.1f);
+    if (SPACE)
+        camera.moveUp(0.1f);
+    if (CTRL)
+        camera.moveDown(0.1f);
+    if (P)
+    {
+        std::cout << "x = " << playerControl.position.x << std::endl;
+        std::cout << "y = " << playerControl.position.y << std::endl;
+        std::cout << "z = " << playerControl.position.z << std::endl;
+    }
+}
+
+void FreeflyCamera::actionEvents(p6::Context& ctx, FreeflyCamera& camera)
+{
+    ctx.key_pressed = [&](const p6::Key& key) {
+        if (key.physical == GLFW_KEY_W)
+        {
+            Z = true;
+        }
+        if (key.physical == GLFW_KEY_A)
+        {
+            Q = true;
+        }
+        if (key.physical == GLFW_KEY_S)
+        {
+            S = true;
+        }
+        if (key.physical == GLFW_KEY_D)
+        {
+            D = true;
+        }
+        if (key.physical == GLFW_KEY_P)
+        {
+            P = true;
+        }
+        if (key.physical == GLFW_KEY_SPACE)
+        {
+            SPACE = true;
+        }
+        if (key.physical == GLFW_KEY_LEFT_CONTROL)
+        {
+            CTRL = true;
+        }
+    };
+
+    ctx.key_released = [&](const p6::Key& key) {
+        if (key.physical == GLFW_KEY_W)
+        {
+            Z = false;
+        }
+        if (key.physical == GLFW_KEY_A)
+        {
+            Q = false;
+        }
+        if (key.physical == GLFW_KEY_S)
+        {
+            S = false;
+        }
+        if (key.physical == GLFW_KEY_D)
+        {
+            D = false;
+        }
+        if (key.physical == GLFW_KEY_P)
+        {
+            P = false;
+        }
+        if (key.physical == GLFW_KEY_SPACE)
+        {
+            SPACE = false;
+        }
+        if (key.physical == GLFW_KEY_LEFT_CONTROL)
+        {
+            CTRL = false;
+        }
+    };
+
+    ctx.mouse_dragged = [&](p6::MouseDrag drag) {
+        camera.rotateLeft(drag.delta.x * 25.f);
+        camera.rotateUp(-drag.delta.y * 25.f);
+    };
+}
+
+void FreeflyCamera::limitCamera(FreeflyCamera& camera)
+{
+    // Vérification des limites de position
+    if (camera.getCamPosition().x < minX)
+        camera.setCamPosition(glm::vec3(minX, camera.getCamPosition().y, camera.getCamPosition().z));
+    if (camera.getCamPosition().x > maxX)
+        camera.setCamPosition(glm::vec3(maxX, camera.getCamPosition().y, camera.getCamPosition().z));
+    if (camera.getCamPosition().z < minZ)
+        camera.setCamPosition(glm::vec3(camera.getCamPosition().x, camera.getCamPosition().y, minZ));
+    if (camera.getCamPosition().z > maxZ)
+        camera.setCamPosition(glm::vec3(camera.getCamPosition().x, camera.getCamPosition().y, maxZ));
+
+    if (camera.getCamPosition().y < minY)
+
+        camera.setCamPosition(glm::vec3(camera.getCamPosition().x, minY, camera.getCamPosition().z));
+
+    if (camera.getCamPosition().y > maxY)
+        camera.setCamPosition(glm::vec3(camera.getCamPosition().x, maxY, camera.getCamPosition().z));
+}

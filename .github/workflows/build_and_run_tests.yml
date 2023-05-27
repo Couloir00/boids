@@ -8,7 +8,7 @@ on:
     branches: [ main ]
 
 env:
-  TARGET: giveItATry # Should be the name of the target you created in your CMakeLists.txt and want to build and run
+  TARGET: MagicBoids # Should be the name of the target you created in your CMakeLists.txt and want to build and run
 
 jobs:
 #-----------------------------------------------------------------------------------------------
@@ -29,6 +29,21 @@ jobs:
     - name: Run
       run: ${{github.workspace}}\build\Debug\${{env.TARGET}} -nogpu
 
+    - name: Look for github workspace
+      run: ls ${{github.workspace}}
+
+    - name: Look for build folder
+      run: ls ${{github.workspace}}/build
+
+    - name: Look for Debug folder
+      run: ls ${{github.workspace}}/build/Debug
+
+    - name: Look for bin folder
+      run: ls ${{github.workspace}}/bin
+
+    - name: Look for bin debug folder
+    run: ls ${{github.workspace}}/bin/${{env.TARGET}}
+
 #-----------------------------------------------------------------------------------------------
   Windows_MSVC_Release:
     name: Windows MSVC Release
@@ -46,6 +61,7 @@ jobs:
 
     - name: Run
       run: ${{github.workspace}}\build\Release\${{env.TARGET}} -nogpu
+
 #-----------------------------------------------------------------------------------------------
   Windows_Clang_Debug:
     name: Windows Clang Debug

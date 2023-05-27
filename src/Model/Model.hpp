@@ -28,7 +28,7 @@ private:
 
     // defining a VAO
     VAO m_vao;
-    // defining VBO instances for position,texcoord, normals
+    // defining VBO instances for position,texcoord, normals & colors
     VBO m_vboPos;
     VBO m_vboNormals;
     VBO m_vboUVs;

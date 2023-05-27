@@ -2,7 +2,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 # ---Choose project name---
-project(giveItATry)
+project(MagicBoids)
 
 # ---Declare source files---
 file(GLOB_RECURSE SOURCE_FILES CONFIGURE_DEPENDS src/*)
@@ -50,10 +50,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(p6)
 target_link_libraries(${PROJECT_NAME} PRIVATE p6::p6)
-
-# ---Set the output folder---
-set_target_properties(${PROJECT_NAME} PROPERTIES
-RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin/${PROJECT_NAME})
 
 # ---Add assets folder and shaders
 Cool__target_copy_folder(${PROJECT_NAME} Assets)
