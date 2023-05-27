@@ -131,6 +131,8 @@ void main() {
         }
         //shadow += calculateShadow(vFragPosLightSpace,i);
     }
+    //attenue les reflets moches mais attenue aussi l'intensité de la lumière
+    sumLights= clamp(sumLights, 0.3, 100.0);
     
     float shadow = calculateShadow(vFragPosLightSpace);
     vec4 lightScene = ((1.0-shadow)*(ambient + vec4(sumLights,1.0)))*color;
