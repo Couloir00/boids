@@ -50,6 +50,7 @@ int main(int argc, char* argv[])
     auto ctx = p6::Context{{.title = "MagicBoids"}};
     ctx.maximize_window();
 
+    // App app;
     ///////////////Boids creation//////////////
 
     // vector of numberBoids boids
