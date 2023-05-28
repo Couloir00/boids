@@ -1,6 +1,5 @@
 #include "LightManager.hpp"
 #include "Lights/LightManager.hpp"
-#include "Sphere/common.hpp"
 #include "glm/ext/vector_float3.hpp"
 
 void LightManager::addPointLight(glm::vec3 position, glm::vec3 color, float intensity)
@@ -43,7 +42,6 @@ void LightManager::initLighting(LightManager& lightManager, const p6::Shader& my
             glm::vec3         lightPos_ws = pointLight->getPosition();
             myShaders.set("uLightType[" + std::to_string(i) + "]", 0);
             myShaders.set("uLightPos_ws[" + std::to_string(i) + "]", lightPos_ws);
-            // std::cout << pointLight[0].getPosition().y << "\n";
         }
         else if (light->getType() == LightType::Directional)
         {

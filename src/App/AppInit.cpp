@@ -1,7 +1,7 @@
 #include "App/App.hpp"
 
 App::App(int window_width, int window_height)
-    : m_ctx(p6::Context{{window_width, window_height, "MagicBoids"}})
+    : m_ctx(p6::Context{{window_width, window_height, "GraveyardMystery"}})
 {
     m_ctx.maximize_window();
 }

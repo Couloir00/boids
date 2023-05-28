@@ -24,12 +24,6 @@ Boid::Boid(vec pos, vec velocity, float radius)
     m_direction = glm::normalize(glm::vec3(p6::random::number(), p6::random::number(), p6::random::number()));
 };
 
-void Boid::draw(p6::Context& ctx, float radius)
-{
-    ctx.fill = {1.f};
-    ctx.circle(p6::Center{m_position}, p6::Radius{radius});
-};
-
 std::vector<Boid> Boid::searchNeighbors(const std::vector<Boid>& boids, const Intensity& intensity)
 {
     std::vector<Boid> neighbors{};

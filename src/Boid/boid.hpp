@@ -22,21 +22,13 @@ private:
     vec separation(const std::vector<Boid>& neighbors);
 
 public:
-    /*Boid();
-    Boid(const Boid& b);*/
     Boid(vec position, vec velocity, float radius);
     ~Boid() = default;
     std::vector<Boid> searchNeighbors(const std::vector<Boid>& boids, const Intensity& intensity);
-    void              draw(p6::Context& ctx, float radius);
     bool              closeToEdges(p6::Context& ctx, float radius) const;
     void              flock(const std::vector<Boid>& boids, p6::Context& ctx, const Intensity& intensity);
     void              avoidEdges(p6::Context& ctx, float radius);
     ModelControls     computeControls() const;
-    vec inline setVelocity(vec vel) { return m_velocity = vel; }
-    vec inline getVelocity() { return m_velocity; }
-    inline float radius() const { return m_radius; }
-    bool         boidImGui();
 };
-
 std::vector<ModelControls> BoidsControls(const std::vector<Boid>& boids, const glm::vec3& viewMatrixPosition);
 #endif

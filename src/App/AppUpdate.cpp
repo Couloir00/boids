@@ -37,12 +37,12 @@ inline void App::updateControls()
 
 inline void App::updatePlayerLight()
 {
-    m_playerLight = glm::vec3(m_playerControls.position.x, m_playerControls.position.y + 1.f, m_playerControls.position.z);
+    m_playerLight = glm::vec3(m_playerControls.position.x, m_playerControls.position.y, m_playerControls.position.z);
 }
 
 inline void App::updateShadows()
 {
-    m_shadows.shadowRenderingModelLOD(m_boidsModel, m_ProjMatrix, m_lightSpaceMatrix, m_boidControls, m_myShaders, m_ctx, m_lodsEnabled);
+    m_shadows.shadowRenderingModelLOD(m_boidsLodModel, m_ProjMatrix, m_lightSpaceMatrix, m_boidControls, m_myShaders, m_ctx);
 }
 
 inline void App::updateCamera()
@@ -71,9 +71,19 @@ inline void App::updateBoids()
 
 inline void App::renderBoids()
 {
-    for (auto const& m_boidControl : m_boidControls)
+    if (m_lodsEnabled)
     {
-        m_boidsModel.modelLODDraw(m_myShaders, m_ViewMatrix, m_boidControl, m_ProjMatrix, m_lodsEnabled);
+        for (auto const& m_boidControl : m_boidControls)
+        {
+            m_boidsLodModel.modelLODDraw(m_myShaders, m_ViewMatrix, m_boidControl, m_ProjMatrix);
+        }
+    }
+    else
+    {
+        for (auto const& m_boidControl : m_boidControls)
+        {
+            m_boidsModel.modelDraw(m_myShaders, m_ViewMatrix, m_boidControl, m_ProjMatrix);
+        }
     }
 }
 
