@@ -71,7 +71,7 @@ First, you need to [install and setup *clangd*](https://julesfouchy.github.io/Le
 If you want to rename the project (called "Simple-p6-Setup" by default), you need to change it in 3 places:
 - In the `CMakeLists.txt`, change the line `project(Simple-p6-Setup)`
 - In the `.github/workflows/build_and_run_tests.yml`, change the line `TARGET: Simple-p6-Setup`
-- In the `src/main.cpp`, change the line `auto ctx = p6::Context{{.title = "Simple-p6-Setup"}};`
+- In the `src/main.cpp`, change the line `auto app.getCtx() = p6::Context{{.title = "Simple-p6-Setup"}};`
 
 ### Folder structure
 

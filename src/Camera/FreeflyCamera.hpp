@@ -24,7 +24,7 @@ private:
     bool CTRL  = false;
     bool P     = false;
 
-    // character position limits
+    // character position limits (very raw way to do it, could be improved)
     float minX = -29.0f;
     float maxX = 29.0f;
     float minZ = -28.5f;
