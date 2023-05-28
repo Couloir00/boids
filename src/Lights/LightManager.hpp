@@ -35,6 +35,7 @@ public:
     PointLight()
         : Light(LightType::Ponctual){};
     inline glm::vec3 getPosition() const { return m_position; }
+    inline void      setPosition(glm::vec3 position) { m_position = position; }
 };
 
 class DirectionalLight : public Light {

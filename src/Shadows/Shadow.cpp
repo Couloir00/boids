@@ -13,7 +13,7 @@ Shadow::Shadow(std::array<std::string, 2> shadowShaderPaths, const int& shadowWi
 {
 }
 
-void Shadow::shadowRenderingModelLOD(ModelLOD& shadowLODModeler, const glm::mat4& projectionMatrix, const glm::mat4 lightSpaceMatrix, const std::vector<ModelControls>& shadowControls, const p6::Shader& shader, const p6::Context& ctx)
+void Shadow::shadowRenderingModelLOD(ModelLOD& shadowLODModeler, const glm::mat4& projectionMatrix, const glm::mat4 lightSpaceMatrix, const std::vector<ModelControls>& shadowControls, const p6::Shader& shader, const p6::Context& ctx, bool& lodsEnabled)
 {
     m_shadowShader.use();
     m_shadowShader.set("LightSpaceMatrix", lightSpaceMatrix);
@@ -26,7 +26,7 @@ void Shadow::shadowRenderingModelLOD(ModelLOD& shadowLODModeler, const glm::mat4
     shader.set("shadowMap", 0);
     for (const auto& shadowControl : shadowControls)
     {
-        shadowLODModeler.modelLODDraw(m_shadowShader, lightSpaceMatrix, shadowControl, projectionMatrix);
+        shadowLODModeler.modelLODDraw(m_shadowShader, lightSpaceMatrix, shadowControl, projectionMatrix, lodsEnabled);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, ctx.main_canvas_width(), ctx.main_canvas_height()); // reset viewport

@@ -13,6 +13,7 @@ void App::update()
         renderBoids();
         renderSkybox();
         renderModels();
+        showGUI();
     };
     cameraActionsEvents();
     m_ctx.start();
@@ -41,7 +42,7 @@ inline void App::updatePlayerLight()
 
 inline void App::updateShadows()
 {
-    m_shadows.shadowRenderingModelLOD(m_boidsModel, m_ProjMatrix, m_lightSpaceMatrix, m_boidControls, m_myShaders, m_ctx);
+    m_shadows.shadowRenderingModelLOD(m_boidsModel, m_ProjMatrix, m_lightSpaceMatrix, m_boidControls, m_myShaders, m_ctx, m_lodsEnabled);
 }
 
 inline void App::updateCamera()
@@ -57,6 +58,7 @@ inline void App::updateRender()
     m_myShaders.set("LightSpaceMatrix", m_lightSpaceMatrix);
     m_myShaders.set("uLightPos_ws[" + std::to_string(m_lightManager.nb_lights - 1) + "]", m_playerLight);
     m_myShaders.set("uUseTexture", false);
+    m_myShaders.set("uEnableFog", m_fogEnabled);
 }
 
 inline void App::updateBoids()
@@ -71,7 +73,7 @@ inline void App::renderBoids()
 {
     for (auto const& m_boidControl : m_boidControls)
     {
-        m_boidsModel.modelLODDraw(m_myShaders, m_ViewMatrix, m_boidControl, m_ProjMatrix);
+        m_boidsModel.modelLODDraw(m_myShaders, m_ViewMatrix, m_boidControl, m_ProjMatrix, m_lodsEnabled);
     }
 }
 
@@ -105,4 +107,9 @@ inline void App::renderModels()
 inline void App::cameraActionsEvents()
 {
     m_camera.actionEvents(m_ctx, m_camera);
+}
+
+inline void App::showGUI()
+{
+    graphicsUtils::utilitiesWindow(m_lodsEnabled, m_fogEnabled);
 }

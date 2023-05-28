@@ -1,5 +1,6 @@
 #include "Model/ModelLod.hpp"
 #include "LODModel/LODModel.hpp"
+#include "imgui.h"
 
 ModelLOD::ModelLOD(std::array<std::string, LOD_NUMBER> paths)
 {
@@ -9,7 +10,10 @@ ModelLOD::ModelLOD(std::array<std::string, LOD_NUMBER> paths)
     }
 }
 
-void ModelLOD::modelLODDraw(const p6::Shader& myShader, const glm::mat4& viewMatrix, const ModelControls& modelControls, const glm::mat4& projectionMatrix)
+void ModelLOD::modelLODDraw(const p6::Shader& myShader, const glm::mat4& viewMatrix, const ModelControls& modelControls, const glm::mat4& projectionMatrix, bool& lodsEnabled)
 {
-    m_models[modelControls.aLod].modelDraw(myShader, viewMatrix, modelControls, projectionMatrix);
+    if (lodsEnabled)
+        m_models[modelControls.aLod].modelDraw(myShader, viewMatrix, modelControls, projectionMatrix);
+    else
+        m_models[0].modelDraw(myShader, viewMatrix, modelControls, projectionMatrix);
 }

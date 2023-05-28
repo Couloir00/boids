@@ -5,6 +5,7 @@
 #include <vector>
 #include "Boid/boid.hpp"
 #include "Camera/FreeflyCamera.hpp"
+#include "GUI/GUI.hpp"
 #include "Intensity/Intensity.hpp"
 #include "Lights/LightManager.hpp"
 #include "Model/ModelControls.hpp"
@@ -44,6 +45,7 @@ private:
     void renderSkybox();
     void renderModels();
     void cameraActionsEvents();
+    void showGUI();
 
 private:
     p6::Context       m_ctx;
@@ -65,6 +67,10 @@ private:
     ModelControls              m_playerControls{};
     glm::vec3                  m_playerLight{};
     ModelLOD                   m_boidsModel{{"Assets/starLow.obj", "Assets/starHigh.obj"}};
+
+    // GUI
+    bool m_lodsEnabled = true;
+    bool m_fogEnabled  = true;
 
     // scene models
     Model m_player{"Assets/ghostLow.obj"};

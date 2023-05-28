@@ -4,9 +4,7 @@
 void Intensity::GUI(p6::Context& ctx)
 {
     ctx.imgui = [&]() {
-        ImGui::Begin("Sliders");
-        ImGui::Text("Boids");
-        ImGui::Text("Behaviors");
+        ImGui::Begin("Boids behaviors");
 
         // Intensity GUI
         ImGui::SliderFloat("Separation", &(separationIntensity), 0.00f, 1.f);

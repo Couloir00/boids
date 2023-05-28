@@ -27,6 +27,9 @@ uniform vec3 uLightColor[MAX_LIGHTS];
 uniform float uLightIntensity[MAX_LIGHTS];
 uniform int uLightType[MAX_LIGHTS];
 
+//fog
+uniform bool uEnableFog;
+
 
 //variable de sortie
 out vec4 fFragColor;
@@ -36,6 +39,9 @@ uniform bool uUseTexture;
 uniform sampler2D uTexture;
 
 vec3 applyFog(in vec3 rgb){
+    if(!uEnableFog){
+        return rgb;
+    }
     float a = 0.02;
     float b= 0.05;
     float distance = distance(vViewPosition, vWorldPosition);

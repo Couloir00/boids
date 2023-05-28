@@ -9,10 +9,11 @@
 class ModelLOD {
 private:
     std::vector<Model> m_models;
+    bool               m_lodsEnabled = true;
 
 public:
     explicit ModelLOD(std::array<std::string, LOD_NUMBER> paths);
 
-    void modelLODDraw(const p6::Shader& myShader, const glm::mat4& viewMatrix, const ModelControls& modelControls, const glm::mat4& projectionMatrix);
+    void modelLODDraw(const p6::Shader& myShader, const glm::mat4& viewMatrix, const ModelControls& modelControls, const glm::mat4& projectionMatrix, bool& lodsEnabled);
 };
 #endif
