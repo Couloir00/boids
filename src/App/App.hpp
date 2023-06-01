@@ -75,8 +75,9 @@ private:
     glm::vec3 m_playerLight{};
 
     // GUI
-    bool m_lodsEnabled = true;
-    bool m_fogEnabled  = true;
+    bool  m_lodsEnabled  = true;
+    bool  m_fogEnabled   = true;
+    float m_fogIntensity = 0.005f;
 
     // scene models
     Model    m_boidsModel{"Assets/starLow.obj"};

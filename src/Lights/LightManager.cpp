@@ -24,10 +24,10 @@ void LightManager::addDirectionalLight(glm::vec3 direction, glm::vec3 color, flo
 
 void LightManager::initLighting(LightManager& lightManager, const p6::Shader& myShaders)
 {
-    lightManager.addPointLight(glm::vec3(-1.0f, 5.0f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), 100.0f);
-    lightManager.addPointLight(glm::vec3(3.5f, -.2f, -0.4f), glm::vec3(0.0f, 0.5f, 1.0f), 5.0f);
+    lightManager.addPointLight(glm::vec3(-1.0f, 4.5f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), 20.0f);
+    lightManager.addPointLight(glm::vec3(3.5f, -0.2f, 1.4f), glm::vec3(0.2f, .8f, 1.0f), 20.0f);
     lightManager.addPointLight(glm::vec3(-5.0f, 0.0f, -8.0f), glm::vec3(0.0f, 1.0f, .7f), 2.0f);
-    lightManager.addDirectionalLight(glm::vec3(-2.0f, 30.0f, 7.0f), glm::vec3(.2f, .5f, .5f), 2.0f);
+    lightManager.addDirectionalLight(glm::vec3(-2.0f, 30.0f, 7.0f), glm::vec3(.2f, .5f, .5f), 1.0f);
 
     // playerLight must be declared after all other lights
     lightManager.addPointLight(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(.0f, 0.0f, 1.0f), 10.0f);

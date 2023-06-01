@@ -59,6 +59,7 @@ inline void App::updateRender()
     m_myShaders.set("uLightPos_ws[" + std::to_string(m_lightManager.nb_lights - 1) + "]", m_playerLight);
     m_myShaders.set("uUseTexture", false);
     m_myShaders.set("uEnableFog", m_fogEnabled);
+    m_myShaders.set("uFogIntensity", m_fogIntensity);
 }
 
 inline void App::updateBoids()
@@ -121,5 +122,5 @@ inline void App::cameraActionsEvents()
 
 inline void App::showGUI()
 {
-    graphicsUtils::utilitiesWindow(m_lodsEnabled, m_fogEnabled);
+    graphicsUtils::utilitiesWindow(m_lodsEnabled, m_fogEnabled, m_fogIntensity);
 }

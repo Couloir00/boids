@@ -29,6 +29,7 @@ uniform int uLightType[MAX_LIGHTS];
 
 //fog
 uniform bool uEnableFog;
+uniform float uFogIntensity;
 
 
 //variable de sortie
@@ -42,8 +43,8 @@ vec3 applyFog(in vec3 rgb){
     if(!uEnableFog){
         return rgb;
     }
-    float a = 0.02;
-    float b= 0.05;
+    float a = uFogIntensity;
+    float b= 0.07;
     float distance = distance(vViewPosition, vWorldPosition);
     vec3 rayOri = vViewPosition;
     vec3 rayDir = normalize(- vViewPosition);
@@ -143,6 +144,5 @@ void main() {
     float shadow = calculateShadow(vFragPosLightSpace);
     vec4 lightScene = ((1.0-shadow)*(ambient + vec4(sumLights,1.0)))*color;
     vec3 foggedColor = applyFog(lightScene.rgb);
-    //fFragColor = vec4(sumLights,1.)*color;
     fFragColor = vec4(foggedColor, lightScene.a);
 }
