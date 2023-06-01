@@ -1,14 +1,15 @@
 #ifndef __APP_HPP_
 #define __APP_HPP_
 
-#include "Model/Model.hpp"
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <vector>
 #include "Boid/boid.hpp"
 #include "Camera/FreeflyCamera.hpp"
 #include "GUI/GUI.hpp"
 #include "Intensity/Intensity.hpp"
+#include "LODModel/LODModel.hpp"
 #include "Lights/LightManager.hpp"
+#include "Model/Model.hpp"
 #include "Model/ModelControls.hpp"
 #include "Model/ModelLod.hpp"
 #include "Shadows/Shadow.hpp"
@@ -42,6 +43,7 @@ private:
     void updateCamera();
     void updateRender();
     void updateBoids();
+    void updateLODModels();
     void renderBoids();
     void renderSkybox();
     void renderModels();
@@ -62,6 +64,12 @@ private:
 
     img::Image m_Img{p6::load_image_buffer("Assets/try1.png")};
     Texture    m_Texture{};
+    // Images for textures
+    img::Image m_Wood{p6::load_image_buffer("Assets/wood.jpg")};
+    img::Image m_Snow{p6::load_image_buffer("Assets/Textures/snow.png")};
+
+    // Actual texture generation
+    Texture m_TexWood{}, m_TextRocks{};
 
     LightManager m_lightManager;
 
@@ -90,7 +98,17 @@ private:
     Model    m_tree2{"Assets/SmallTreeHigh.obj"};
     Model    m_fence{"Assets/Fence.obj"};
     Model    m_grave{"Assets/graveHigh.obj"};
+    Model m_boidsModel{"Assets/starLow.obj"};
+    Model m_player{"Assets/ghostLow.obj"};
+    Model m_ground{"Assets/Ground.obj"};
+    Model m_manor{"Assets/SpookyHouseHigh.obj"};
+    Model m_cave{"Assets/caveLow.obj"};
+    Model m_tree{"Assets/BigTreeLow.obj"};
+    Model m_tree2{"Assets/SmallTreeHigh.obj"};
+    Model m_fence{"Assets/Fence.obj"};
+
     ModelLOD m_boidsLodModel{{"Assets/starLow.obj", "Assets/starHigh.obj"}};
+    ModelLOD m_Lodtree{{"Assets/BigTreeLow.obj", "Assets/BigTreeHigh.obj"}};
 
     // scene models controls
     std::vector<ModelControls> m_boidControls;
