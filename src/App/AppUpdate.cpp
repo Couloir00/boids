@@ -112,7 +112,7 @@ inline void App::renderModels()
     m_player.modelDraw(m_myShaders, m_ViewMatrix, m_playerControls, m_ProjMatrix);
     m_myShaders.set("uUseTexture", true);
     m_myShaders.set("uTexture", 1);
-    m_TextRocks.activateTexture(1);
+    m_TexSnow.activateTexture(1);
     m_ground.modelDraw(m_myShaders, m_ViewMatrix, m_groundControl, m_ProjMatrix);
     m_myShaders.set("uUseTexture", false);
     m_myShaders.set("uUseTexture", true);

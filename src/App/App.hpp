@@ -57,19 +57,15 @@ private:
 
     // Shaders
     p6::Shader m_myShaders    = p6::load_shader("Shaders/3D.vs.glsl", "Shaders/Light.fs.glsl"),
-               m_texShaders   = p6::load_shader("Shaders/Tex.vs.glsl", "Shaders/normals.fs.glsl"),
                m_skyboxShader = p6::load_shader("Shaders/SkyboxEnv.vs.glsl", "Shaders/SkyboxEnv.fs.glsl");
 
     FreeflyCamera m_camera;
-
-    img::Image m_Img{p6::load_image_buffer("Assets/try1.png")};
-    Texture    m_Texture{};
     // Images for textures
-    img::Image m_Wood{p6::load_image_buffer("Assets/wood.jpg")};
+    img::Image m_Wood{p6::load_image_buffer("Assets/try1.png")};
     img::Image m_Snow{p6::load_image_buffer("Assets/Textures/snow.png")};
 
     // Actual texture generation
-    Texture m_TexWood{}, m_TextRocks{};
+    Texture m_TexWood{}, m_TexSnow{}, m_Texture{};
 
     LightManager m_lightManager;
 
@@ -89,23 +85,15 @@ private:
     float m_fogRed = 0.074f, m_fogGreen = 0.305f, m_fogBlue = 0.391f;
 
     // scene models
-    Model    m_boidsModel{"Assets/starLow.obj"};
-    Model    m_player{"Assets/ghostLow.obj"};
-    Model    m_ground{"Assets/Ground.obj"};
-    Model    m_manor{"Assets/SpookyHouseHigh.obj"};
-    Model    m_cave{"Assets/caveLow.obj"};
-    Model    m_tree{"Assets/BigTreeHigh.obj"};
-    Model    m_tree2{"Assets/SmallTreeHigh.obj"};
-    Model    m_fence{"Assets/Fence.obj"};
-    Model    m_grave{"Assets/graveHigh.obj"};
     Model m_boidsModel{"Assets/starLow.obj"};
     Model m_player{"Assets/ghostLow.obj"};
     Model m_ground{"Assets/Ground.obj"};
     Model m_manor{"Assets/SpookyHouseHigh.obj"};
     Model m_cave{"Assets/caveLow.obj"};
-    Model m_tree{"Assets/BigTreeLow.obj"};
+    Model m_tree{"Assets/BigTreeHigh.obj"};
     Model m_tree2{"Assets/SmallTreeHigh.obj"};
     Model m_fence{"Assets/Fence.obj"};
+    Model m_grave{"Assets/graveHigh.obj"};
 
     ModelLOD m_boidsLodModel{{"Assets/starLow.obj", "Assets/starHigh.obj"}};
     ModelLOD m_Lodtree{{"Assets/BigTreeLow.obj", "Assets/BigTreeHigh.obj"}};

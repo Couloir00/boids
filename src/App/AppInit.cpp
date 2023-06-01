@@ -50,7 +50,7 @@ inline void App::initCamera()
 inline void App::initTextures()
 {
     m_TexWood.initTexture(static_cast<int>(m_Wood.width()), static_cast<int>(m_Wood.height()), m_Wood.data(), GL_RGBA, GL_UNSIGNED_BYTE);
-    m_TextRocks.initTexture(static_cast<int>(m_Snow.width()), static_cast<int>(m_Snow.height()), m_Snow.data(), GL_RGBA, GL_UNSIGNED_BYTE);
+    m_TexSnow.initTexture(static_cast<int>(m_Snow.width()), static_cast<int>(m_Snow.height()), m_Snow.data(), GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
 inline void App::initLights()
