@@ -8,9 +8,13 @@ void graphicsUtils::utilitiesWindow(bool& lodsEnabled, bool& fogEnabled, float& 
     ImGui::Checkbox("Enable LODs", &lodsEnabled);
     ImGui::Text("Fog");
     ImGui::Checkbox("Enable Fog", &fogEnabled);
-    ImGui::SliderFloat("Fog Intensity", &fogIntensity, 0.0001f, 0.01f);
-    ImGui::SliderFloat("Fog Red", &fogRed, 0.0f, 1.0f);
-    ImGui::SliderFloat("Fog Green", &fogGreen, 0.0f, 1.0f);
-    ImGui::SliderFloat("Fog Blue", &fogBlue, 0.0f, 1.0f);
+    ImGui::SliderFloat("Fog Intensity", &fogIntensity, 0.0001f, 0.025f);
+    float fogColor[3] = {fogRed, fogGreen, fogBlue};
+    if (ImGui::ColorEdit3("Fog Color", fogColor))
+    {
+        fogRed   = fogColor[0];
+        fogGreen = fogColor[1];
+        fogBlue  = fogColor[2];
+    }
     ImGui::End();
 }

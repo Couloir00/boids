@@ -61,7 +61,7 @@ private:
 
     FreeflyCamera m_camera;
     // Images for textures
-    img::Image m_Wood{p6::load_image_buffer("Assets/try1.png")};
+    img::Image m_Wood{p6::load_image_buffer("Assets/try.jpg")};
     img::Image m_Snow{p6::load_image_buffer("Assets/Textures/snow.png")};
 
     // Actual texture generation
