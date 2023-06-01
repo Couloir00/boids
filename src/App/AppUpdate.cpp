@@ -65,6 +65,7 @@ inline void App::updateBoids()
 {
     for (auto& boid : boids)
     {
+        boid.avoidEdges(boid);
         boid.flock(boids, m_ctx, m_intensities); // updating the boids here
     }
 }
