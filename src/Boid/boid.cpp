@@ -6,17 +6,7 @@
 #include "glm/geometric.hpp"
 #include "p6/p6.h"
 
-// les comportements sont bons
-// TO DO Vérifier la fonction flock, enlever l'acceleration
-// Voir pour mettre une séparation minimale de radius, pour faire un slider pour le nombre de boids
-
 using vec = glm::vec3;
-
-/*Boid::Boid()
-    : m_position(vec(p6::random::point(), -10.f)), m_velocity(vec(p6::random::direction(), -10.f)), m_direction(vec(p6::random::direction(), -10.f)){};
-
-Boid::Boid(const Boid& b)
-    : m_position(b.m_position), m_velocity(b.m_velocity), m_direction(b.m_direction){};*/
 
 Boid::Boid(vec pos, vec velocity, float radius)
     : m_position(pos), m_velocity(velocity), m_radius(radius)
@@ -99,24 +89,36 @@ void Boid::flock(const std::vector<Boid>& boids, p6::Context& ctx, const Intensi
     m_position += m_velocity * vec{2.0f} * vec{ctx.delta_time()};
 }
 
-void Boid::avoidEdges(p6::Context& ctx, float radius)
+void Boid::avoidEdges(const Boid& boid)
 {
-    if (m_position.x <= -ctx.aspect_ratio() + radius)
+    if (boid.m_position.x < minX)
     {
-        m_position.x = ctx.aspect_ratio() - radius;
+        m_direction.x = 1.0f;
     }
-    else if (m_position.x >= ctx.aspect_ratio() - radius)
+    else if (boid.m_position.x > maxX)
     {
-        m_position.x = -ctx.aspect_ratio() + radius;
+        m_direction.x = -1.0f;
     }
-    else if (m_position.y <= -1 + radius)
+
+    if (boid.m_position.y < minY)
     {
-        m_position.y = 1 - radius;
+        m_direction.y = 1.0f;
     }
-    else if (m_position.y >= 1 - radius)
+    else if (boid.m_position.y > maxY)
     {
-        m_position.y = -1 + radius;
+        m_direction.y = -1.0f;
     }
+
+    if (boid.m_position.z < minZ)
+    {
+        m_direction.z = 1.0f;
+    }
+    else if (boid.m_position.z > maxZ)
+    {
+        m_direction.z = -1.0f;
+    }
+
+    m_direction = glm::normalize(m_direction);
 }
 
 ModelControls Boid::computeControls() const
