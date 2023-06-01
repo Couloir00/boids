@@ -49,8 +49,8 @@ inline void App::initCamera()
 
 inline void App::initTextures()
 {
-    m_Img = p6::load_image_buffer("Assets/wood.jpg");
-    m_Texture.initTexture(static_cast<int>(m_Img.width()), static_cast<int>(m_Img.height()), m_Img.data(), GL_RGBA, GL_UNSIGNED_BYTE);
+    m_TexWood.initTexture(static_cast<int>(m_Wood.width()), static_cast<int>(m_Wood.height()), m_Wood.data(), GL_RGBA, GL_UNSIGNED_BYTE);
+    m_TextRocks.initTexture(static_cast<int>(m_Snow.width()), static_cast<int>(m_Snow.height()), m_Snow.data(), GL_RGBA, GL_UNSIGNED_BYTE);
 }
 
 inline void App::initLights()

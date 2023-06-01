@@ -1,4 +1,6 @@
 #include "App/App.hpp"
+#include "LODModel/LODModel.hpp"
+#include "glm/fwd.hpp"
 
 void App::update()
 {
@@ -10,6 +12,7 @@ void App::update()
         updateCamera();
         updateRender();
         updateBoids();
+        updateLODModels();
         renderBoids();
         renderSkybox();
         renderModels();
@@ -71,6 +74,11 @@ inline void App::updateBoids()
     }
 }
 
+inline void App::updateLODModels()
+{
+    m_treeControl.aLod = updateLOD(m_camera.getCamPosition(), m_treeControl.position);
+}
+
 inline void App::renderBoids()
 {
     if (m_lodsEnabled)
@@ -79,6 +87,8 @@ inline void App::renderBoids()
         {
             m_boidsLodModel.modelLODDraw(m_myShaders, m_ViewMatrix, m_boidControl, m_ProjMatrix);
         }
+
+        // lod Model
     }
     else
     {
@@ -97,10 +107,14 @@ inline void App::renderSkybox()
 inline void App::renderModels()
 {
     m_player.modelDraw(m_myShaders, m_ViewMatrix, m_playerControls, m_ProjMatrix);
-    m_ground.modelDraw(m_myShaders, m_ViewMatrix, m_groundControl, m_ProjMatrix);
     m_myShaders.set("uUseTexture", true);
     m_myShaders.set("uTexture", 1);
-    m_Texture.activateTexture(1);
+    m_TextRocks.activateTexture(1);
+    m_ground.modelDraw(m_myShaders, m_ViewMatrix, m_groundControl, m_ProjMatrix);
+    m_myShaders.set("uUseTexture", false);
+    m_myShaders.set("uUseTexture", true);
+    m_myShaders.set("uTexture", 1);
+    m_TexWood.activateTexture(1);
     m_manor.modelDraw(m_myShaders, m_ViewMatrix, m_manorControl, m_ProjMatrix);
 
     m_myShaders.set("uUseTexture", false);
@@ -108,10 +122,16 @@ inline void App::renderModels()
 
     m_myShaders.set("uUseTexture", true);
     m_myShaders.set("uTexture", 1);
-    m_Texture.activateTexture(1);
-    m_tree.modelDraw(m_myShaders, m_ViewMatrix, m_treeControl, m_ProjMatrix);
+    m_TexWood.activateTexture(1);
+    if (m_lodsEnabled)
+    {
+        m_Lodtree.modelLODDraw(m_myShaders, m_ViewMatrix, m_treeControl, m_ProjMatrix);
+    }
+    else
+    {
+        m_tree.modelDraw(m_myShaders, m_ViewMatrix, m_treeControl, m_ProjMatrix);
+    }
     m_tree2.modelDraw(m_myShaders, m_ViewMatrix, m_tree2Control, m_ProjMatrix);
-
     m_myShaders.set("uUseTexture", false);
     m_fence.modelDraw(m_myShaders, m_ViewMatrix, m_fenceControl, m_ProjMatrix);
 }
