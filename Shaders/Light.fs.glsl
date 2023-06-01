@@ -30,6 +30,9 @@ uniform int uLightType[MAX_LIGHTS];
 //fog
 uniform bool uEnableFog;
 uniform float uFogIntensity;
+uniform float uRed;
+uniform float uGreen;
+uniform float uBlue;
 
 
 //variable de sortie
@@ -50,7 +53,7 @@ vec3 applyFog(in vec3 rgb){
     vec3 rayDir = normalize(- vViewPosition);
     float fogAmount = (a / b) * exp(-rayOri.y * b) * (1.0 - exp(-distance * rayDir.y * b)) / rayDir.y;
 
-    vec3 fogColor = vec3(0.5, 0.6, 0.7);
+    vec3 fogColor = vec3(uRed, uGreen, uBlue);
     return mix(rgb, fogColor, fogAmount);
 }
 

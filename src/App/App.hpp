@@ -60,7 +60,7 @@ private:
 
     FreeflyCamera m_camera;
 
-    img::Image m_Img{p6::load_image_buffer("Assets/wood.jpg")};
+    img::Image m_Img{p6::load_image_buffer("Assets/try1.png")};
     Texture    m_Texture{};
 
     LightManager m_lightManager;
@@ -78,6 +78,7 @@ private:
     bool  m_lodsEnabled  = true;
     bool  m_fogEnabled   = true;
     float m_fogIntensity = 0.005f;
+    float m_fogRed = 0.074f, m_fogGreen = 0.305f, m_fogBlue = 0.391f;
 
     // scene models
     Model    m_boidsModel{"Assets/starLow.obj"};
@@ -88,6 +89,7 @@ private:
     Model    m_tree{"Assets/BigTreeHigh.obj"};
     Model    m_tree2{"Assets/SmallTreeHigh.obj"};
     Model    m_fence{"Assets/Fence.obj"};
+    Model    m_grave{"Assets/graveHigh.obj"};
     ModelLOD m_boidsLodModel{{"Assets/starLow.obj", "Assets/starHigh.obj"}};
 
     // scene models controls
@@ -97,6 +99,7 @@ private:
     ModelControls              m_manorControl{glm::vec3(2.f, -2.65f, 4.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
     ModelControls              m_caveControl{glm::vec3(-5.f, -2.5f, -8.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
     ModelControls              m_treeControl{glm::vec3(0.f, -5.f, -.5f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+    ModelControls              m_graveControl{glm::vec3(-10.f, -3.5f, 15.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
     ModelControls              m_tree2Control{glm::vec3(-3.f, -5.5f, 15.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
     ModelControls              m_fenceControl{glm::vec3(0.f, -5.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
 };

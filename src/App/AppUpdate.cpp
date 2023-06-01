@@ -60,6 +60,9 @@ inline void App::updateRender()
     m_myShaders.set("uUseTexture", false);
     m_myShaders.set("uEnableFog", m_fogEnabled);
     m_myShaders.set("uFogIntensity", m_fogIntensity);
+    m_myShaders.set("uRed", m_fogRed);
+    m_myShaders.set("uGreen", m_fogGreen);
+    m_myShaders.set("uBlue", m_fogBlue);
 }
 
 inline void App::updateBoids()
@@ -98,6 +101,7 @@ inline void App::renderModels()
 {
     m_player.modelDraw(m_myShaders, m_ViewMatrix, m_playerControls, m_ProjMatrix);
     m_ground.modelDraw(m_myShaders, m_ViewMatrix, m_groundControl, m_ProjMatrix);
+    m_grave.modelDraw(m_myShaders, m_ViewMatrix, m_graveControl, m_ProjMatrix);
     m_myShaders.set("uUseTexture", true);
     m_myShaders.set("uTexture", 1);
     m_Texture.activateTexture(1);
@@ -123,5 +127,5 @@ inline void App::cameraActionsEvents()
 
 inline void App::showGUI()
 {
-    graphicsUtils::utilitiesWindow(m_lodsEnabled, m_fogEnabled, m_fogIntensity);
+    graphicsUtils::utilitiesWindow(m_lodsEnabled, m_fogEnabled, m_fogIntensity, m_fogRed, m_fogGreen, m_fogBlue);
 }
