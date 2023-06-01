@@ -44,7 +44,7 @@ vec3 applyFog(in vec3 rgb){
         return rgb;
     }
     float a = uFogIntensity;
-    float b= 0.07;
+    float b= 0.07f;
     float distance = distance(vViewPosition, vWorldPosition);
     vec3 rayOri = vViewPosition;
     vec3 rayDir = normalize(- vViewPosition);

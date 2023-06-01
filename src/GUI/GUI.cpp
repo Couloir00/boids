@@ -8,6 +8,6 @@ void graphicsUtils::utilitiesWindow(bool& lodsEnabled, bool& fogEnabled, float& 
     ImGui::Checkbox("Enable LODs", &lodsEnabled);
     ImGui::Text("Fog");
     ImGui::Checkbox("Enable Fog", &fogEnabled);
-    ImGui::SliderFloat("Fog Intensity", &fogIntensity, 0.0001, 0.01);
+    ImGui::SliderFloat("Fog Intensity", &fogIntensity, 0.0001f, 0.01f);
     ImGui::End();
 }
