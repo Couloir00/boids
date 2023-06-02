@@ -172,22 +172,22 @@ void Model::modelInitialize()
     // vertices
     glBindBuffer(GL_ARRAY_BUFFER, m_vboPos.getId());
     // fill
-    glBufferData(GL_ARRAY_BUFFER, m_outVertices.size() * sizeof(glm::vec3), m_outVertices.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_outVertices.size() * sizeof(glm::vec3)), m_outVertices.data(), GL_STATIC_DRAW);
 
     // tex
     glBindBuffer(GL_ARRAY_BUFFER, m_vboUVs.getId());
     // fill
-    glBufferData(GL_ARRAY_BUFFER, m_outUvs.size() * sizeof(glm::vec2), m_outUvs.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_outUvs.size() * sizeof(glm::vec2)), m_outUvs.data(), GL_STATIC_DRAW);
 
     // normals
     glBindBuffer(GL_ARRAY_BUFFER, m_vboNormals.getId());
     // fill
-    glBufferData(GL_ARRAY_BUFFER, m_outNormals.size() * sizeof(glm::vec3), m_outNormals.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_outNormals.size() * sizeof(glm::vec3)), m_outNormals.data(), GL_STATIC_DRAW);
 
     // color
     glBindBuffer(GL_ARRAY_BUFFER, m_vboColor.getId());
     // fill
-    glBufferData(GL_ARRAY_BUFFER, m_outColors.size() * sizeof(glm::vec3), m_outColors.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, static_cast<GLsizeiptr>(m_outColors.size() * sizeof(glm::vec3)), m_outColors.data(), GL_STATIC_DRAW);
 
     // Debind the vbo
     glBindBuffer(GL_ARRAY_BUFFER, 0);

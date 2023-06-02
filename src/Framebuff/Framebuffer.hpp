@@ -47,6 +47,8 @@ public:
     // copy construct (copy not allowed to prevent dumb moves)
     FrameBuffer(const FrameBuffer&) = delete;
 
+    FrameBuffer& operator=(const FrameBuffer&) = delete;
+
     // Moving constructor
     FrameBuffer(FrameBuffer&& aBuff) noexcept
         : m_bufferId{std::exchange(aBuff.m_bufferId, 0)}

@@ -16,7 +16,6 @@ void App::update()
         renderBoids();
         renderSkybox();
         renderModels();
-        showGUI();
     };
     cameraActionsEvents();
     m_ctx.start();
@@ -50,7 +49,7 @@ inline void App::updateShadows()
 
 inline void App::updateCamera()
 {
-    m_camera.keyboardEvents(m_camera, m_playerControls);
+    m_camera.keyboardEvents(m_camera);
     m_camera.limitCamera(m_camera);
 }
 
@@ -73,7 +72,7 @@ inline void App::updateBoids()
     for (auto& boid : boids)
     {
         boid.avoidEdges(boid);
-        boid.flock(boids, m_ctx, m_intensities); // updating the boids here
+        boid.flock(boids, m_ctx, m_intensities);
     }
 }
 
@@ -146,15 +145,10 @@ inline void App::renderModels()
     m_grave3.modelDraw(m_myShaders, m_ViewMatrix, m_grave3Control, m_ProjMatrix);
     m_grave4.modelDraw(m_myShaders, m_ViewMatrix, m_grave4Control, m_ProjMatrix);
     m_cave.modelDraw(m_myShaders, m_ViewMatrix, m_caveControl, m_ProjMatrix);
-    // m_myShaders.set("uUseTexture", false);
+    m_myShaders.set("uUseTexture", false);
 }
 
 inline void App::cameraActionsEvents()
 {
     m_camera.actionEvents(m_ctx, m_camera);
-}
-
-inline void App::showGUI()
-{
-    graphicsUtils::utilitiesWindow(m_lodsEnabled, m_fogEnabled, m_fogIntensity, m_fogRed, m_fogGreen, m_fogBlue);
 }

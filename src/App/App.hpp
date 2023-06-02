@@ -3,7 +3,7 @@
 
 #define DOCTEST_CONFIG_IMPLEMENT
 #include <vector>
-#include "Boid/boid.hpp"
+#include "Boid/Boid.hpp"
 #include "Camera/FreeflyCamera.hpp"
 #include "GUI/GUI.hpp"
 #include "Intensity/Intensity.hpp"
@@ -29,6 +29,7 @@ private:
     // Init
     void        createBoids();
     void        initIntensities();
+    void        initGUI();
     static void initDepth();
     void        initCamera();
     void        initTextures();
@@ -48,7 +49,6 @@ private:
     void renderSkybox();
     void renderModels();
     void cameraActionsEvents();
-    void showGUI();
 
 private:
     p6::Context       m_ctx;
@@ -59,7 +59,9 @@ private:
     p6::Shader m_myShaders    = p6::load_shader("Shaders/3D.vs.glsl", "Shaders/Light.fs.glsl"),
                m_skyboxShader = p6::load_shader("Shaders/SkyboxEnv.vs.glsl", "Shaders/SkyboxEnv.fs.glsl");
 
+    // Main camera
     FreeflyCamera m_camera;
+
     // Images for textures
     img::Image m_Wood{p6::load_image_buffer("Assets/Textures/wood.jpg")};
     img::Image m_Snow{p6::load_image_buffer("Assets/Textures/snow.png")};
@@ -77,6 +79,8 @@ private:
     glm::mat4 m_ProjMatrix{};
     glm::mat4 m_ViewMatrix{};
     glm::mat4 m_lightSpaceMatrix{};
+
+    // PLayer Light
     glm::vec3 m_playerLight{};
 
     // GUI
@@ -86,29 +90,27 @@ private:
     float m_fogRed = 0.074f, m_fogGreen = 0.305f, m_fogBlue = 0.391f;
 
     // scene models
-    Model m_boidsModel{"Assets/starLow.obj"};
-    Model m_player{"Assets/ghostLow.obj"};
-    Model m_ground{"Assets/Ground.obj"};
-    Model m_manor{"Assets/SpookyHouseHigh.obj"};
-    Model m_spookyFence{"Assets/SpookyFence.obj"};
-    Model m_cave{"Assets/caveHigh.obj"};
-    Model m_fence{"Assets/Fence.obj"};
+    Model m_boidsModel{"Assets/OBJ/starLow.obj"};
+    Model m_player{"Assets/OBJ/ghostLow.obj"};
+    Model m_ground{"Assets/OBJ/Ground.obj"};
+    Model m_manor{"Assets/OBJ/SpookyHouseHigh.obj"};
+    Model m_spookyFence{"Assets/OBJ/SpookyFence.obj"};
+    Model m_cave{"Assets/OBJ/caveHigh.obj"};
+    Model m_fence{"Assets/OBJ/Fence.obj"};
 
-    Model m_tree{"Assets/BigTreeHigh.obj"};
-    Model m_tree2{"Assets/SmallTreeHigh.obj"};
-    Model m_tree3{"Assets/BigTreeHigh.obj"};
-    Model m_tree4{"Assets/SmallTreeHigh.obj"};
+    Model m_tree{"Assets/OBJ/BigTreeHigh.obj"};
+    Model m_tree2{"Assets/OBJ/SmallTreeHigh.obj"};
+    Model m_tree3{"Assets/OBJ/BigTreeHigh.obj"};
+    Model m_tree4{"Assets/OBJ/SmallTreeHigh.obj"};
 
-    Model m_grave{"Assets/graveHigh.obj"};
-    Model m_grave2{"Assets/crossGraveHigh.obj"};
-    Model m_grave3{"Assets/cross.obj"};
-    Model m_grave4{"Assets/graves.obj"};
+    Model m_grave{"Assets/OBJ/graveHigh.obj"};
+    Model m_grave2{"Assets/OBJ/CrossGraveHigh.obj"};
+    Model m_grave3{"Assets/OBJ/cross.obj"};
+    Model m_grave4{"Assets/OBJ/graves.obj"};
 
-    Model m_rock{"Assets/Rock2.obj"};
-
-    ModelLOD m_boidsLodModel{{"Assets/starLow.obj", "Assets/starHigh.obj"}};
-    ModelLOD m_Lodtree{{"Assets/BigTreeLow.obj", "Assets/BigTreeHigh.obj"}};
-    ModelLOD m_LodHouse{{"Assets/SpookyHouseLow.obj", "Assets/SpookyHouseHigh.obj"}};
+    ModelLOD m_boidsLodModel{{"Assets/OBJ/starLow.obj", "Assets/OBJ/starHigh.obj"}};
+    ModelLOD m_Lodtree{{"Assets/OBJ/BigTreeLow.obj", "Assets/OBJ/BigTreeHigh.obj"}};
+    ModelLOD m_LodHouse{{"Assets/OBJ/SpookyHouseLow.obj", "Assets/OBJ/SpookyHouseHigh.obj"}};
 
     // scene models controls
     std::vector<ModelControls> m_boidControls;

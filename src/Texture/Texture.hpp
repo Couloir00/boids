@@ -5,7 +5,7 @@
 
 class Texture {
 private:
-    GLuint m_texId;
+    GLuint m_texId{};
 
 public:
     // vao constructor
@@ -16,6 +16,8 @@ public:
 
     // copy construct (copy not allowed to prevent dumb moves)
     Texture(const Texture&) = delete;
+
+    Texture& operator=(const Texture&) = delete;
 
     // Moving constructor
     Texture(Texture&& aTex) noexcept

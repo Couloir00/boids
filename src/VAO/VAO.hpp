@@ -5,7 +5,7 @@
 
 class VAO {
 private:
-    GLuint m_vaoId;
+    GLuint m_vaoId{};
 
 public:
     // vao constructor
@@ -16,6 +16,8 @@ public:
 
     // copy construct (copy not allowed to prevent dumb moves)
     VAO(const VAO&) = delete;
+
+    VAO& operator=(const VAO&) = delete;
 
     // Jules' advice to use move constructor and assignement for vao//
 

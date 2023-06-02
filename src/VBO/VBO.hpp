@@ -5,7 +5,7 @@
 
 class VBO {
 private:
-    GLuint m_vboId;
+    GLuint m_vboId{};
 
 public:
     // vao constructor
@@ -16,6 +16,8 @@ public:
 
     // copy construct (copy not allowed to prevent dumb moves)
     VBO(const VBO&) = delete;
+
+    VBO& operator=(const VBO&) = delete;
 
     // Jules' advice to use move constructor and assignement for vbo//
 

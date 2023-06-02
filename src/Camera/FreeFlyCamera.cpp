@@ -77,7 +77,7 @@ glm::vec3 FreeflyCamera::getCamUpVector() const
     return m_UpVector;
 }
 
-void FreeflyCamera::keyboardEvents(FreeflyCamera& camera, ModelControls& playerControl) const
+void FreeflyCamera::keyboardEvents(FreeflyCamera& camera) const
 {
     float speed = 0.2f;
     if (Z)
@@ -92,12 +92,6 @@ void FreeflyCamera::keyboardEvents(FreeflyCamera& camera, ModelControls& playerC
         camera.moveUp(speed);
     if (CTRL)
         camera.moveDown(speed);
-    if (P)
-    {
-        std::cout << "x = " << playerControl.position.x << std::endl;
-        std::cout << "y = " << playerControl.position.y << std::endl;
-        std::cout << "z = " << playerControl.position.z << std::endl;
-    }
 }
 
 void FreeflyCamera::actionEvents(p6::Context& ctx, FreeflyCamera& camera)
@@ -118,10 +112,6 @@ void FreeflyCamera::actionEvents(p6::Context& ctx, FreeflyCamera& camera)
         if (key.physical == GLFW_KEY_D)
         {
             D = true;
-        }
-        if (key.physical == GLFW_KEY_P)
-        {
-            P = true;
         }
         if (key.physical == GLFW_KEY_SPACE)
         {
@@ -150,10 +140,6 @@ void FreeflyCamera::actionEvents(p6::Context& ctx, FreeflyCamera& camera)
         {
             D = false;
         }
-        if (key.physical == GLFW_KEY_P)
-        {
-            P = false;
-        }
         if (key.physical == GLFW_KEY_SPACE)
         {
             SPACE = false;
@@ -170,7 +156,7 @@ void FreeflyCamera::actionEvents(p6::Context& ctx, FreeflyCamera& camera)
     };
 }
 
-void FreeflyCamera::limitCamera(FreeflyCamera& camera)
+void FreeflyCamera::limitCamera(FreeflyCamera& camera) const
 {
     // Vérification des limites de position
     if (camera.getCamPosition().x < minX)
@@ -181,11 +167,8 @@ void FreeflyCamera::limitCamera(FreeflyCamera& camera)
         camera.setCamPosition(glm::vec3(camera.getCamPosition().x, camera.getCamPosition().y, minZ));
     if (camera.getCamPosition().z > maxZ)
         camera.setCamPosition(glm::vec3(camera.getCamPosition().x, camera.getCamPosition().y, maxZ));
-
     if (camera.getCamPosition().y < minY)
-
         camera.setCamPosition(glm::vec3(camera.getCamPosition().x, minY, camera.getCamPosition().z));
-
     if (camera.getCamPosition().y > maxY)
         camera.setCamPosition(glm::vec3(camera.getCamPosition().x, maxY, camera.getCamPosition().z));
 }

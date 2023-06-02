@@ -10,6 +10,7 @@ void App::init()
 {
     createBoids();
     initIntensities();
+    initGUI();
     initDepth();
     initCamera();
     initTextures();
@@ -33,7 +34,14 @@ inline void App::createBoids()
 inline void App::initIntensities()
 {
     m_intensities = {0.5f, 0.5f, 0.5f, 0.5f};
-    m_intensities.GUI(m_ctx);
+}
+
+inline void App::initGUI()
+{
+    m_ctx.imgui = [&]() {
+        m_intensities.GUI();
+        graphicsUtils::utilitiesWindow(m_lodsEnabled, m_fogEnabled, m_fogIntensity, m_fogRed, m_fogGreen, m_fogBlue);
+    };
 }
 
 inline void App::initDepth()

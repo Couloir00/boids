@@ -22,7 +22,6 @@ private:
     bool D     = false;
     bool SPACE = false;
     bool CTRL  = false;
-    bool P     = false;
 
     // character position limits (very raw way to do it, could be improved)
     float minX = -29.0f;
@@ -50,9 +49,9 @@ public:
     glm::vec3 getCamUpVector() const;
 
     inline void setCamPosition(glm::vec3 pos) { m_Position = pos; }
-    void        keyboardEvents(FreeflyCamera& camera, ModelControls& playerControl) const;
+    void        keyboardEvents(FreeflyCamera& camera) const;
     void        actionEvents(p6::Context& ctx, FreeflyCamera& camera);
-    void        limitCamera(FreeflyCamera& camera);
+    void        limitCamera(FreeflyCamera& camera) const;
 };
 
 #endif
