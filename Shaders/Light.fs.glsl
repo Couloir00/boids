@@ -14,7 +14,7 @@ in vec4 vFragPosLightSpace;
 // uniform float uShininess;
 
 //light infos
-const int MAX_LIGHTS = 10;
+const int MAX_LIGHTS = 15;
 // uniform vec3 uLightPos_vs[MAX_LIGHTS];
 uniform vec3 uLightPos_ws[MAX_LIGHTS];
 

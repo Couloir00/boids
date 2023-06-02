@@ -79,18 +79,19 @@ glm::vec3 FreeflyCamera::getCamUpVector() const
 
 void FreeflyCamera::keyboardEvents(FreeflyCamera& camera, ModelControls& playerControl) const
 {
+    float speed = 0.2f;
     if (Z)
-        camera.moveFront(0.1f);
+        camera.moveFront(speed);
     if (Q)
-        camera.moveLeft(0.1f);
+        camera.moveLeft(speed);
     if (S)
-        camera.moveFront(-0.1f);
+        camera.moveFront(-speed);
     if (D)
-        camera.moveLeft(-0.1f);
+        camera.moveLeft(-speed);
     if (SPACE)
-        camera.moveUp(0.1f);
+        camera.moveUp(speed);
     if (CTRL)
-        camera.moveDown(0.1f);
+        camera.moveDown(speed);
     if (P)
     {
         std::cout << "x = " << playerControl.position.x << std::endl;

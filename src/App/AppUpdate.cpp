@@ -108,14 +108,8 @@ inline void App::renderSkybox()
 
 inline void App::renderModels()
 {
-    if (m_lodsPlayerEnabled)
-    {
-        m_LodPlayer.modelLODDraw(m_myShaders, m_ViewMatrix, m_playerControls, m_ProjMatrix);
-    }
-    else
-    {
-        m_player.modelDraw(m_myShaders, m_ViewMatrix, m_playerControls, m_ProjMatrix);
-    }
+    m_player.modelDraw(m_myShaders, m_ViewMatrix, m_playerControls, m_ProjMatrix);
+
     m_myShaders.set("uUseTexture", true);
     m_myShaders.set("uTexture", 1);
     m_TexSnow.activateTexture(1);
@@ -162,5 +156,5 @@ inline void App::cameraActionsEvents()
 
 inline void App::showGUI()
 {
-    graphicsUtils::utilitiesWindow(m_lodsEnabled, m_lodsPlayerEnabled, m_fogEnabled, m_fogIntensity, m_fogRed, m_fogGreen, m_fogBlue);
+    graphicsUtils::utilitiesWindow(m_lodsEnabled, m_fogEnabled, m_fogIntensity, m_fogRed, m_fogGreen, m_fogBlue);
 }

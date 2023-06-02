@@ -28,7 +28,7 @@ private:
     float minX = -29.0f;
     float maxX = 29.0f;
     float minZ = -28.5f;
-    float maxZ = 30.5f;
+    float maxZ = 30.f;
     float minY = -2.2f;
     float maxY = 14.f;
 

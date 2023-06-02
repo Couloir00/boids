@@ -80,10 +80,9 @@ private:
     glm::vec3 m_playerLight{};
 
     // GUI
-    bool  m_lodsEnabled       = true;
-    bool  m_lodsPlayerEnabled = true;
-    bool  m_fogEnabled        = true;
-    float m_fogIntensity      = 0.005f;
+    bool  m_lodsEnabled  = true;
+    bool  m_fogEnabled   = true;
+    float m_fogIntensity = 0.005f;
     float m_fogRed = 0.074f, m_fogGreen = 0.305f, m_fogBlue = 0.391f;
 
     // scene models
@@ -110,7 +109,6 @@ private:
     ModelLOD m_boidsLodModel{{"Assets/starLow.obj", "Assets/starHigh.obj"}};
     ModelLOD m_Lodtree{{"Assets/BigTreeLow.obj", "Assets/BigTreeHigh.obj"}};
     ModelLOD m_LodHouse{{"Assets/SpookyHouseLow.obj", "Assets/SpookyHouseHigh.obj"}};
-    ModelLOD m_LodPlayer{{"Assets/ghostHigh.obj"}};
 
     // scene models controls
     std::vector<ModelControls> m_boidControls;
