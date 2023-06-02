@@ -12,6 +12,7 @@ The root directory contains the following files and directories:
 
 - `Makefile`: The Makefile used for compiling and building the project.
 - `Assets`: It contains all the assets used in the project.
+  - `OBJ`: It contains all the `.obj` files used in the project (models).
   - `Textures`: It contains the textures used in the project.
     - `SkyboxFaces`: It contains all the textures of the different faces for the skybox.
 - `Shaders`: It contains all the shaders used in the project.
