@@ -61,11 +61,12 @@ private:
 
     FreeflyCamera m_camera;
     // Images for textures
-    img::Image m_Wood{p6::load_image_buffer("Assets/wood.jpg")};
+    img::Image m_Wood{p6::load_image_buffer("Assets/Textures/wood.jpg")};
     img::Image m_Snow{p6::load_image_buffer("Assets/Textures/snow.png")};
+    img::Image m_Stone{p6::load_image_buffer("Assets/Textures/graveTex.jpg")};
 
     // Actual texture generation
-    Texture m_TexWood{}, m_TexSnow{}, m_Texture{};
+    Texture m_TexWood{}, m_TexSnow{}, m_TexStone{};
 
     LightManager m_lightManager;
 
@@ -129,8 +130,6 @@ private:
     ModelControls m_grave2Control{glm::vec3(-14.f, -3.2f, -16.0f), glm::vec3(1.f, 4.3f, -90.f), glm::vec3(0.f), 1.f, LOD_LOW};
     ModelControls m_grave3Control{glm::vec3(0.f, -3.2f, 0.f), glm::vec3(1.f, 0.f, -87.f), glm::vec3(0.f), 1.f, LOD_LOW};
     ModelControls m_grave4Control{glm::vec3(0.f, -3.1f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
-
-    ModelControls m_rockControl{glm::vec3(2.f, -5.2f, 16.0f), glm::vec3(1.f, 9.f, 42.f), glm::vec3(0.f), 1.f, LOD_LOW};
 };
 
 inline void runTestsAndCheckGPU(int argc, char* argv[])

@@ -1,5 +1,6 @@
 #include "GUI.hpp"
 #include <imgui.h>
+#include <array>
 
 void graphicsUtils::utilitiesWindow(bool& lodsEnabled, bool& lodsPlayerEnabled, bool& fogEnabled, float& fogIntensity, float& fogRed, float& fogGreen, float& fogBlue)
 {
@@ -10,8 +11,8 @@ void graphicsUtils::utilitiesWindow(bool& lodsEnabled, bool& lodsPlayerEnabled, 
     ImGui::Text("Fog");
     ImGui::Checkbox("Enable Fog", &fogEnabled);
     ImGui::SliderFloat("Fog Intensity", &fogIntensity, 0.0001f, 0.025f);
-    float fogColor[3] = {fogRed, fogGreen, fogBlue};
-    if (ImGui::ColorEdit3("Fog Color", fogColor))
+    std::array<float, 3> fogColor = {fogRed, fogGreen, fogBlue};
+    if (ImGui::ColorEdit3("Fog Color", fogColor.data()))
     {
         fogRed   = fogColor[0];
         fogGreen = fogColor[1];

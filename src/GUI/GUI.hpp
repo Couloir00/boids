@@ -5,7 +5,7 @@
 
 class graphicsUtils {
 public:
-    static void utilitiesWindow(bool& lodsEnabled, bool& lodsPlayerEnabled, bool& enableFog, float& fogIntensity, float& fogRed, float& fogGreen, float& fogBlue);
+    static void utilitiesWindow(bool& lodsEnabled, bool& lodsPlayerEnabled, bool& fogEnabled, float& fogIntensity, float& fogRed, float& fogGreen, float& fogBlue);
 };
 
 #endif

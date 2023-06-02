@@ -89,9 +89,9 @@ void Model::modelLoad()
         }
         else if (lineHeader == "f")
         {
-            unsigned int vertexIndex[3];
-            unsigned int uvIndex[3];
-            unsigned int normalIndex[3];
+            std::array<int, 3> vertexIndex{};
+            std::array<int, 3> uvIndex{};
+            std::array<int, 3> normalIndex{};
 
             file.ignore(1);
             file >> vertexIndex[0];
@@ -239,7 +239,7 @@ void Model::modelDraw(const p6::Shader& myShader, const glm::mat4& viewMatrix, c
         glm::vec4(leftAxis, 0.0f),
         glm::vec4(upAxis, 0.0f),
         glm::vec4(frontAxis, 0.0f),
-        glm::vec4(0.0f, 0.0f, 0.0f, 1.0f) // homogene
+        glm::vec4(0.0f, 0.0f, 0.0f, 1.0f)
     );
     /// ModelView MATRIX : TRS ///
 
@@ -255,10 +255,6 @@ void Model::modelDraw(const p6::Shader& myShader, const glm::mat4& viewMatrix, c
     glm::mat4 MVPMatrix = projectionMatrix * MVMatrix;
 
     /// Uniform variables from shader///
-
-    // classic uniform
-    /*GLuint uMVMatrixID = glGetUniformLocation(myShader.id(), "uMVMatrix");
-    glUniformMatrix4fv(uMVMatrixID, 1, GL_FALSE, glm::value_ptr(MVMatrix));*/
 
     // p6 shader abstraction
     myShader.set("uMVMatrix", MVMatrix);

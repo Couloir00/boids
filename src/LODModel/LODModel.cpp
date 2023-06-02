@@ -8,7 +8,7 @@ LOD updateLOD(glm::vec3 cameraPosition, glm::vec3 modelPosition)
     // default LOD
     LOD lod = LOD::LOD_LOW;
 
-    if (cameraDistance < 10)
+    if (cameraDistance < 15)
     {
         lod = LOD::LOD_HIGH;
     }
