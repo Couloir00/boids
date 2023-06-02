@@ -32,7 +32,6 @@ public:
     Boid(const Boid&) = default;
     Boid(glm::vec3 position, glm::vec3 velocity, float radius);
     Boid& operator=(const Boid&)           = delete;
-    Boid(Boid&& aBoid) noexcept            = delete;
     Boid& operator=(Boid&& aBoid) noexcept = delete;
     ~Boid()                                = default;
     std::vector<Boid> searchNeighbors(const std::vector<Boid>& boids, const Intensity& intensity);
