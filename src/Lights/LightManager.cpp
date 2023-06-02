@@ -25,8 +25,8 @@ void LightManager::addDirectionalLight(glm::vec3 direction, glm::vec3 color, flo
 void LightManager::initLighting(LightManager& lightManager, const p6::Shader& myShaders)
 {
     lightManager.addPointLight(glm::vec3(-1.0f, 4.5f, 0.0f), glm::vec3(1.0f, 0.0f, 1.0f), 20.0f);
-    lightManager.addPointLight(glm::vec3(2.5f, -1.f, 4.f), glm::vec3(0.4f, .1f, 1.0f), 3.0f);
-    lightManager.addPointLight(glm::vec3(-5.0f, 0.0f, -7.65f), glm::vec3(0.0f, 1.0f, .7f), 2.0f);
+    lightManager.addPointLight(glm::vec3(5.4f, -1.3f, 3.f), glm::vec3(0.1f, .6f, 1.0f), 4.0f);
+    lightManager.addPointLight(glm::vec3(-5.2f, 0.0f, -7.65f), glm::vec3(0.0f, 1.0f, .7f), 2.0f);
     lightManager.addDirectionalLight(glm::vec3(-2.0f, 30.0f, 7.0f), glm::vec3(.2f, .5f, .5f), 1.0f);
     lightManager.addPointLight(glm::vec3(-20.f, -1.f, 14.f), glm::vec3(0.2f, .8f, 1.0f), 10.0f);
 

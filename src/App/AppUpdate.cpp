@@ -110,17 +110,13 @@ inline void App::renderSkybox()
 inline void App::renderModels()
 {
     m_player.modelDraw(m_myShaders, m_ViewMatrix, m_playerControls, m_ProjMatrix);
+
     m_myShaders.set("uUseTexture", true);
     m_myShaders.set("uTexture", 1);
     m_TexSnow.activateTexture(1);
     m_ground.modelDraw(m_myShaders, m_ViewMatrix, m_groundControl, m_ProjMatrix);
     m_myShaders.set("uUseTexture", false);
-    m_myShaders.set("uUseTexture", true);
-    m_myShaders.set("uTexture", 1);
-    m_TexWood.activateTexture(1);
-    m_manor.modelDraw(m_myShaders, m_ViewMatrix, m_manorControl, m_ProjMatrix);
 
-    m_myShaders.set("uUseTexture", false);
     m_cave.modelDraw(m_myShaders, m_ViewMatrix, m_caveControl, m_ProjMatrix);
 
     m_myShaders.set("uUseTexture", true);
@@ -129,14 +125,27 @@ inline void App::renderModels()
     if (m_lodsEnabled)
     {
         m_Lodtree.modelLODDraw(m_myShaders, m_ViewMatrix, m_treeControl, m_ProjMatrix);
+        m_LodHouse.modelLODDraw(m_myShaders, m_ViewMatrix, m_manorControl, m_ProjMatrix);
     }
     else
     {
         m_tree.modelDraw(m_myShaders, m_ViewMatrix, m_treeControl, m_ProjMatrix);
+        m_manor.modelDraw(m_myShaders, m_ViewMatrix, m_manorControl, m_ProjMatrix);
     }
     m_tree2.modelDraw(m_myShaders, m_ViewMatrix, m_tree2Control, m_ProjMatrix);
+    m_tree3.modelDraw(m_myShaders, m_ViewMatrix, m_tree3Control, m_ProjMatrix);
+    m_tree4.modelDraw(m_myShaders, m_ViewMatrix, m_tree4Control, m_ProjMatrix);
     m_myShaders.set("uUseTexture", false);
+
     m_fence.modelDraw(m_myShaders, m_ViewMatrix, m_fenceControl, m_ProjMatrix);
+    m_spookyFence.modelDraw(m_myShaders, m_ViewMatrix, m_spookyFenceControl, m_ProjMatrix);
+
+    m_grave.modelDraw(m_myShaders, m_ViewMatrix, m_graveControl, m_ProjMatrix);
+    m_grave2.modelDraw(m_myShaders, m_ViewMatrix, m_grave2Control, m_ProjMatrix);
+    m_grave3.modelDraw(m_myShaders, m_ViewMatrix, m_grave3Control, m_ProjMatrix);
+    m_grave4.modelDraw(m_myShaders, m_ViewMatrix, m_grave4Control, m_ProjMatrix);
+
+    m_rock.modelDraw(m_myShaders, m_ViewMatrix, m_rockControl, m_ProjMatrix);
 }
 
 inline void App::cameraActionsEvents()

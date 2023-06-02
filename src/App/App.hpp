@@ -61,7 +61,7 @@ private:
 
     FreeflyCamera m_camera;
     // Images for textures
-    img::Image m_Wood{p6::load_image_buffer("Assets/try.jpg")};
+    img::Image m_Wood{p6::load_image_buffer("Assets/wood.jpg")};
     img::Image m_Snow{p6::load_image_buffer("Assets/Textures/snow.png")};
 
     // Actual texture generation
@@ -89,25 +89,46 @@ private:
     Model m_player{"Assets/ghostLow.obj"};
     Model m_ground{"Assets/Ground.obj"};
     Model m_manor{"Assets/SpookyHouseHigh.obj"};
-    Model m_cave{"Assets/caveLow.obj"};
+    Model m_spookyFence{"Assets/SpookyFence.obj"};
+    Model m_cave{"Assets/caveHigh.obj"};
+    Model m_fence{"Assets/Fence.obj"};
+
     Model m_tree{"Assets/BigTreeHigh.obj"};
     Model m_tree2{"Assets/SmallTreeHigh.obj"};
-    Model m_fence{"Assets/Fence.obj"};
+    Model m_tree3{"Assets/BigTreeHigh.obj"};
+    Model m_tree4{"Assets/SmallTreeHigh.obj"};
+
     Model m_grave{"Assets/graveHigh.obj"};
+    Model m_grave2{"Assets/crossGraveHigh.obj"};
+    Model m_grave3{"Assets/cross.obj"};
+    Model m_grave4{"Assets/graves.obj"};
+
+    Model m_rock{"Assets/Rock2.obj"};
 
     ModelLOD m_boidsLodModel{{"Assets/starLow.obj", "Assets/starHigh.obj"}};
     ModelLOD m_Lodtree{{"Assets/BigTreeLow.obj", "Assets/BigTreeHigh.obj"}};
+    ModelLOD m_LodHouse{{"Assets/SpookyHouseLow.obj", "Assets/SpookyHouseHigh.obj"}};
 
     // scene models controls
     std::vector<ModelControls> m_boidControls;
     ModelControls              m_playerControls{};
     ModelControls              m_groundControl{glm::vec3(0.f, -3.f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
-    ModelControls              m_manorControl{glm::vec3(2.f, -2.65f, 4.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
-    ModelControls              m_caveControl{glm::vec3(-5.f, -2.5f, -8.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
-    ModelControls              m_treeControl{glm::vec3(0.f, -5.f, -.5f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
-    ModelControls              m_graveControl{glm::vec3(-10.f, -3.5f, 15.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
-    ModelControls              m_tree2Control{glm::vec3(-3.f, -5.5f, 15.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+    ModelControls              m_manorControl{glm::vec3(5.f, -2.7f, 4.0f), glm::vec3(-5.f, -.1f, 90.f), glm::vec3(0.f), 1.f, LOD_LOW};
+    ModelControls              m_spookyFenceControl{glm::vec3(5.f, -2.5f, 4.0f), glm::vec3(-5.f, -.1f, 90.f), glm::vec3(0.f), 1.f, LOD_LOW};
+    ModelControls              m_caveControl{glm::vec3(-5.f, -2.5f, -8.0f), glm::vec3(1.f, -0.6f, -36.f), glm::vec3(0.f), 1.f, LOD_LOW};
     ModelControls              m_fenceControl{glm::vec3(0.f, -5.0f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+
+    ModelControls m_treeControl{glm::vec3(0.f, -5.f, -.5f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+    ModelControls m_tree2Control{glm::vec3(-3.f, -5.5f, 15.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+    ModelControls m_tree3Control{glm::vec3(-17.f, -6.f, -4.7f), glm::vec3(1.f, 0.f, -83.f), glm::vec3(0.f), 1.f, LOD_LOW};
+    ModelControls m_tree4Control{glm::vec3(19.f, -5.5f, -15.0f), glm::vec3(1.f, 0.f, -53.f), glm::vec3(0.f), 1.f, LOD_LOW};
+
+    ModelControls m_graveControl{glm::vec3(-17.f, -3.2f, 5.0f), glm::vec3(1.f, 2.f, -37.f), glm::vec3(0.f), 1.f, LOD_LOW};
+    ModelControls m_grave2Control{glm::vec3(-14.f, -3.2f, -16.0f), glm::vec3(1.f, 4.3f, -90.f), glm::vec3(0.f), 1.f, LOD_LOW};
+    ModelControls m_grave3Control{glm::vec3(0.f, -3.2f, 0.f), glm::vec3(1.f, 0.f, -87.f), glm::vec3(0.f), 1.f, LOD_LOW};
+    ModelControls m_grave4Control{glm::vec3(0.f, -3.1f, 0.0f), glm::vec3(1.f, 0.f, 0.f), glm::vec3(0.f), 1.f, LOD_LOW};
+
+    ModelControls m_rockControl{glm::vec3(2.f, -5.2f, 16.0f), glm::vec3(1.f, 9.f, 42.f), glm::vec3(0.f), 1.f, LOD_LOW};
 };
 
 inline void runTestsAndCheckGPU(int argc, char* argv[])
